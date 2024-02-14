@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <GLAD/glad.h>
+#include <glad/glad.h>
 #include <myshaders.h>
 
 char *readShaderFileFromPath(const char *path)
