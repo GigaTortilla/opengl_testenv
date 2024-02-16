@@ -34,7 +34,7 @@ int f_blending()
 	// Somehow setting the viewport here after window creation crashes the application
 	// glViewport(0, 0, 800, 600);		// Sets the viewport to the lower left corner with size 800x600
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	setWindowIcon(window, "textures/coding.png");
+	setWindowIcon(window, "textures/citrus.png");
 	
 	// Initialize and load OpenGL function pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -62,16 +62,16 @@ int f_blending()
     };
 	
 	// Set up Vertex Buffer Object and Vertex Array Object
-	unsigned int VBO, VAO, EBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
+	unsigned int VBOs[2], VAOs[2], EBOs[2];
+	glGenVertexArrays(2, VAOs);
+	glGenBuffers(2, VBOs);
+	glGenBuffers(2, EBOs);
 	
 	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBindVertexArray(VAOs[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[0]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	// Position attribute at attribute position 0 in the vertex shader layout
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
@@ -79,7 +79,21 @@ int f_blending()
 	// Color attribute at attribute position 1 in the vertex shader layout
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-	// 
+	// Texture position attribute at attribute position 2 in the vertex shader layout
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
+	// Repeat this step for the second square
+	glBindVertexArray(VAOs[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[1]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 	
@@ -135,11 +149,6 @@ int f_blending()
 	glUniform1i(glGetUniformLocation(shaderProgramTri, "texture1"), 0);
 	glUniform1i(glGetUniformLocation(shaderProgramTri, "texture2"), 1);
 
-	mat4 transformation;
-	glm_mat4_identity(transformation);
-	glm_rotate(transformation, glm_rad(90.0f), (vec3) { 0.0f, 0.0f, 1.0f });
-	glm_scale(transformation, (vec3) { 0.5f, 0.5f, 0.5f });
-	
 	//////////////////////
 	/// Wireframe Mode ///
 	//////////////////////
@@ -165,8 +174,13 @@ int f_blending()
 		
 		// change the blend of the container
 		float timeValue = glfwGetTime();
-		float blendValue = (sin(3 * timeValue) + 1.0) * 0.3;
-		float offsetValue = sin(2 * timeValue) * 0.5;
+		float blendValue = (sin(3.0f * timeValue) + 1.0f) * 0.3f;
+		float offsetValue = sin(2.0f * timeValue) * 0.3f;
+		mat4 transformation;
+		glm_mat4_identity(transformation);
+		glm_translate(transformation, (vec3) { offsetValue, 0.4f, 0.0f });
+		glm_rotate(transformation, timeValue, (vec3) { 0.0f, 0.0f, 1.0f });
+		glm_scale(transformation, (vec3) { 0.6f, 0.6f, 0.6f });
 		unsigned int blendLocation = glGetUniformLocation(shaderProgramTri, "blend");
 		unsigned int offsetLocation = glGetUniformLocation(shaderProgramTri, "ourOffsetX");
 		unsigned int transformLocation = glGetUniformLocation(shaderProgramTri, "transform");
@@ -174,17 +188,28 @@ int f_blending()
 		glUniform1f(offsetLocation, offsetValue);
 		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, transformation[0]);
 		
-		glBindVertexArray(VAO);
+		glBindVertexArray(VAOs[0]);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		// glBindVertexArray(0);
+		
+		///////////////////////////////////////////////////////////////////////////////////////////
+
+		glm_mat4_identity(transformation);
+		glm_translate(transformation, (vec3) { -0.4f, -0.4f, 0.0f });
+		glm_scale(transformation, (vec3) { offsetValue + 0.5f, offsetValue + 0.5f, 0.0f });
+		glUniform1f(blendLocation, blendValue);
+		glUniform1f(offsetLocation, 0.0f);
+		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, transformation[0]);
+		
+		glBindVertexArray(VAOs[0]);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 	// Ressource deallocation
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
+	glDeleteVertexArrays(1, VAOs);
+	glDeleteBuffers(1, VBOs);
+    glDeleteBuffers(1, EBOs);
 	glDeleteProgram(shaderProgramTri);
 	
 	glfwTerminate();
