@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <cglm/cglm.h>
 #include <myshaders.h>
 #include <testenv_funcs.h>
 
@@ -23,7 +24,7 @@ int f_blending()
 	
 	// Create a GLFW window
 	GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
-	if (window == NULL)
+	if (!window)
 	{
 		printf("Failed to create GLFW window!\n");
 		glfwTerminate();
@@ -133,6 +134,11 @@ int f_blending()
 	glUseProgram(shaderProgramTri);
 	glUniform1i(glGetUniformLocation(shaderProgramTri, "texture1"), 0);
 	glUniform1i(glGetUniformLocation(shaderProgramTri, "texture2"), 1);
+
+	mat4 transformation;
+	glm_mat4_identity(transformation);
+	glm_rotate(transformation, glm_rad(90.0f), (vec3) { 0.0f, 0.0f, 1.0f });
+	glm_scale(transformation, (vec3) { 0.5f, 0.5f, 0.5f });
 	
 	//////////////////////
 	/// Wireframe Mode ///
@@ -161,10 +167,12 @@ int f_blending()
 		float timeValue = glfwGetTime();
 		float blendValue = (sin(3 * timeValue) + 1.0) * 0.3;
 		float offsetValue = sin(2 * timeValue) * 0.5;
-		int blendLocation = glGetUniformLocation(shaderProgramTri, "blend");
-		int offsetLocation = glGetUniformLocation(shaderProgramTri, "ourOffsetX");
+		unsigned int blendLocation = glGetUniformLocation(shaderProgramTri, "blend");
+		unsigned int offsetLocation = glGetUniformLocation(shaderProgramTri, "ourOffsetX");
+		unsigned int transformLocation = glGetUniformLocation(shaderProgramTri, "transform");
 		glUniform1f(blendLocation, blendValue);
 		glUniform1f(offsetLocation, offsetValue);
+		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, transformation[0]);
 		
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
