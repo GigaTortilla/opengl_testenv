@@ -4,6 +4,6 @@
 int main()
 {
 	int exitState;
-	exitState = f_blending();
+	exitState = f_coord_sys();
 	return exitState;
 }
