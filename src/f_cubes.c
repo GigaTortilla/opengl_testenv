@@ -93,30 +93,32 @@ int f_cubes()
 		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
+	vec3 cubePositions[] = {
+		{  0.0f,  0.0f,  0.0f },
+		{  2.0f,  5.0f, -15.0f }, 
+		{ -1.5f, -2.2f, -2.5f },  
+		{ -3.8f, -2.0f, -12.3f },  
+		{  2.4f, -0.4f, -3.5f },  
+		{ -1.7f,  3.0f, -7.5f },  
+		{  1.3f, -2.0f, -2.5f },  
+		{  1.5f,  2.0f, -2.5f }, 
+		{  1.5f,  0.2f, -1.5f }, 
+		{ -1.3f,  1.0f, -1.5f }  
+};
 	
 	// Set up Vertex Buffer Object and Vertex Array Object
-	unsigned int VBOs[2], VAOs[2];
-	glGenVertexArrays(2, VAOs);
-	glGenBuffers(2, VBOs);
+	unsigned int VBO, VAO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
 	
 	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-	glBindVertexArray(VAOs[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	// Position attribute at attribute position 0 in the vertex shader layout
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
 	glEnableVertexAttribArray(0);
 	// Texture coords attribute at attribute position 1 in the vertex shader layout
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	// Repeat this step for the second cube
-	glBindVertexArray(VAOs[1]);
-	glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
-	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 	
@@ -196,54 +198,46 @@ int f_cubes()
 		glUseProgram(shaderProgram);
 
 		float timeValue = glfwGetTime();
-		float blendValue = (sin(2.5f * timeValue) + 1.0f) * 0.35f;
-		float offsetValue = sin(2.0f * timeValue) * 0.5f;
+		float blendValue;
+
+		// Finding the location of the shader uniforms
+		unsigned int modelLocation = glGetUniformLocation(shaderProgram, "model");
+		unsigned int viewLocation = glGetUniformLocation(shaderProgram, "view");
+		unsigned int projectionLocation = glGetUniformLocation(shaderProgram, "projection");
+		unsigned int blendLocation = glGetUniformLocation(shaderProgram, "blend");
 		
 		mat4 model, view, projection;
 		glm_mat4_identity(model);
 		glm_mat4_identity(view);
 		glm_mat4_identity(projection);
 		
-		// Transformation matrix calculations
-		glm_translate(model, (vec3) { -0.8f, -0.8f, 0.0f });
-		glm_rotate(model, timeValue, (vec3) { 0.5f, 1.0f, 0.0f });
+		// Transformation matrix calculations and sending them to the shader
 		glm_translate(view, (vec3) { 0.0f, 0.0f, -5.0f });
 		glm_perspective(glm_rad(45.0f), 800.0f/600.0f, 0.1f, 100.0f, projection);
-
-		// sending the transformation matrices to the vertex shader
-		unsigned int modelLocation = glGetUniformLocation(shaderProgram, "model");
-		unsigned int viewLocation = glGetUniformLocation(shaderProgram, "view");
-		unsigned int projectionLocation = glGetUniformLocation(shaderProgram, "projection");
-		unsigned int blendLocation = glGetUniformLocation(shaderProgram, "blend");
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, model[0]);
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, view[0]);
 		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection[0]);
-		glUniform1f(blendLocation, blendValue);
-		
-		glBindVertexArray(VAOs[0]);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		
-		///////////////////////////////////////////////////////////////////////////////////////////
-		
-		glm_mat4_identity(model);
-		glm_translate(model, (vec3) { 1.0f - offsetValue, 1.0f, -0.3f });
-		glm_rotate(model, timeValue, (vec3) { 0.5f, 0.4f, 0.0f });
-		glm_scale(model, (vec3) { 0.7f, 0.7f, 0.7f });
 
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, model[0]);
-		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, view[0]);
-		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection[0]);
-		glUniform1f(blendLocation, blendValue);
+		glBindVertexArray(VAO);
+		for(unsigned int i = 0; i < sizeof(cubePositions) / sizeof(vec3); i++)
+		{
+			glm_mat4_identity(model);
+			glm_translate(model, cubePositions[i]);
+			glm_rotate(model, glm_rad((20.0f * (i + 1.0f)) + 20.0f * ((i % 3) ? 1.0f : timeValue)), (vec3) { 1.0f, 0.3f, 0.5f });
+			blendValue = (sin(2.5f * timeValue + i) + 1.0f) * 0.35f;
 
-		glBindVertexArray(VAOs[1]);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, model[0]);
+			glUniform1f(blendLocation, blendValue);
+
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+		
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 	// Ressource deallocation
-	glDeleteVertexArrays(2, VAOs);
-	glDeleteBuffers(2, VBOs);
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
 	glDeleteProgram(shaderProgram);
 	
 	glfwTerminate();
