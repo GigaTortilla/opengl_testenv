@@ -10,6 +10,9 @@
 // WARNING: #define STB_IMAGE_IMPLEMENTATION in main.c
 #include <stb_image.h>
 
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 600
+
 int f_cubes()
 {
 	// Initialize and configure GLFW
@@ -23,7 +26,7 @@ int f_cubes()
 #endif
 	
 	// Create a GLFW window
-	GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL", NULL, NULL);
 	if (!window)
 	{
 		printf("Failed to create GLFW window!\n");
@@ -213,7 +216,7 @@ int f_cubes()
 		
 		// Transformation matrix calculations and sending them to the shader
 		glm_translate(view, (vec3) { 0.0f, 0.0f, -5.0f });
-		glm_perspective(glm_rad(45.0f), 800.0f/600.0f, 0.1f, 100.0f, projection);
+		glm_perspective(glm_rad(45.0f), (float)SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f, projection);
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, view[0]);
 		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection[0]);
 
