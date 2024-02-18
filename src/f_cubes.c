@@ -10,7 +10,7 @@
 // WARNING: #define STB_IMAGE_IMPLEMENTATION in main.c
 #include <stb_image.h>
 
-int f_coord_sys()
+int f_cubes()
 {
 	// Initialize and configure GLFW
 	glfwInit();
@@ -43,59 +43,82 @@ int f_coord_sys()
 		return -1;
 	}
 	
+	glEnable(GL_DEPTH_TEST);
+
 	////////////////////////////////////////////
 	/// Build and compile the shader program ///
 	////////////////////////////////////////////
-	unsigned int shaderProgram = buildShaderProgram("transformShader.vert", "transformShader.frag");
-	
-	// Example data 
+	unsigned int shaderProgram = buildShaderProgram("cubeShader.vert", "cubeShader.frag");
+
 	float vertices[] = {
-		// positions          // colors           // texture coords
-		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
-    unsigned int indices[] = {  
-        0, 1, 3, // first triangle
-        1, 2, 3  // second triangle
-    };
 	
 	// Set up Vertex Buffer Object and Vertex Array Object
-	unsigned int VBOs[2], VAOs[2], EBOs[2];
+	unsigned int VBOs[2], VAOs[2];
 	glGenVertexArrays(2, VAOs);
 	glGenBuffers(2, VBOs);
-	glGenBuffers(2, EBOs);
 	
 	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
 	glBindVertexArray(VAOs[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[0]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	// Position attribute at attribute position 0 in the vertex shader layout
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
 	glEnableVertexAttribArray(0);
-	// Color attribute at attribute position 1 in the vertex shader layout
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
+	// Texture coords attribute at attribute position 1 in the vertex shader layout
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-	// Texture position attribute at attribute position 2 in the vertex shader layout
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
 
-	// Repeat this step for the second square
+	// Repeat this step for the second cube
 	glBindVertexArray(VAOs[1]);
 	glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[1]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
 	
 	// unbind only when necessary
 	// since VAOs require a call to glBindVertexArray to be modified anyways
@@ -161,7 +184,7 @@ int f_coord_sys()
 		
 		// clear screen first
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Bind the textures on the corresponding texture units
 		glActiveTexture(GL_TEXTURE0);
@@ -173,9 +196,8 @@ int f_coord_sys()
 		glUseProgram(shaderProgram);
 
 		float timeValue = glfwGetTime();
-		float scaleValue = sin(1.8f * timeValue) * 0.2f + 0.8f;
 		float blendValue = (sin(2.5f * timeValue) + 1.0f) * 0.35f;
-		float offsetValue = sin(2.0f * timeValue) * 0.3f;
+		float offsetValue = sin(2.0f * timeValue) * 0.5f;
 		
 		mat4 model, view, projection;
 		glm_mat4_identity(model);
@@ -183,10 +205,9 @@ int f_coord_sys()
 		glm_mat4_identity(projection);
 		
 		// Transformation matrix calculations
-		glm_translate(model, (vec3) { 0.5f + offsetValue, 0.5f, 0.0f });
-		glm_rotate(model, glm_rad(-55.0f), (vec3) { 1.0f, 0.0f, 0.0f });
-
-		glm_translate(view, (vec3) { 0.0f, 0.0f, -3.0f });
+		glm_translate(model, (vec3) { -0.8f, -0.8f, 0.0f });
+		glm_rotate(model, timeValue, (vec3) { 0.5f, 1.0f, 0.0f });
+		glm_translate(view, (vec3) { 0.0f, 0.0f, -5.0f });
 		glm_perspective(glm_rad(45.0f), 800.0f/600.0f, 0.1f, 100.0f, projection);
 
 		// sending the transformation matrices to the vertex shader
@@ -200,15 +221,14 @@ int f_coord_sys()
 		glUniform1f(blendLocation, blendValue);
 		
 		glBindVertexArray(VAOs[0]);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		
 		///////////////////////////////////////////////////////////////////////////////////////////
 		
 		glm_mat4_identity(model);
-		glm_translate(model, (vec3) { -0.3f, -0.4f, 0.0f });
-		glm_rotate(model, glm_rad(-55.0f), (vec3) { 1.0f, 0.0f, 0.0f });
-		glm_rotate_z(model, timeValue, model);
-		glm_scale(model, (vec3) { scaleValue, scaleValue, 0.0f });
+		glm_translate(model, (vec3) { 1.0f - offsetValue, 1.0f, -0.3f });
+		glm_rotate(model, timeValue, (vec3) { 0.5f, 0.4f, 0.0f });
+		glm_scale(model, (vec3) { 0.7f, 0.7f, 0.7f });
 
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, model[0]);
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, view[0]);
@@ -216,7 +236,7 @@ int f_coord_sys()
 		glUniform1f(blendLocation, blendValue);
 
 		glBindVertexArray(VAOs[1]);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -224,7 +244,6 @@ int f_coord_sys()
 	// Ressource deallocation
 	glDeleteVertexArrays(2, VAOs);
 	glDeleteBuffers(2, VBOs);
-    glDeleteBuffers(2, EBOs);
 	glDeleteProgram(shaderProgram);
 	
 	glfwTerminate();

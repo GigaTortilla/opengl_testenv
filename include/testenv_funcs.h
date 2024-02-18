@@ -14,5 +14,6 @@ int f_practice_triangle();
 int f_tex_tri();
 int f_tri_insanity();
 int f_coord_sys();
+int f_cubes();
 
 #endif

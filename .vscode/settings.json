@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "testenv_funcs.h": "c",
+        "stb_image.h": "c"
+    }
+}

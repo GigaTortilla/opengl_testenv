@@ -4,6 +4,6 @@
 int main()
 {
 	int exitState;
-	exitState = f_coord_sys();
+	exitState = f_cubes();
 	return exitState;
 }
