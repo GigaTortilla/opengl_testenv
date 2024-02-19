@@ -12,6 +12,7 @@
 // WARNING: #define STB_IMAGE_IMPLEMENTATION in main.c
 #include <stb_image.h>
 
+// Screen constants
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
@@ -27,38 +28,7 @@ int f_cubes()
 
 	float lastFrame = 0.0f;
 
-	// Initialize and configure GLFW
-	glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);	// Tells GLFW that we're using OpenGL 3.3
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);	// required under Mac OS X
-#endif
-	
-	// Create a GLFW window
-	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL", NULL, NULL);
-	if (!window)
-	{
-		printf("Failed to create GLFW window!\n");
-		glfwTerminate();
-		return -1;
-	}
-	glfwMakeContextCurrent(window);
-	// Somehow setting the viewport here after window creation crashes the application
-	// glViewport(0, 0, 800, 600);		// Sets the viewport to the lower left corner with size 800x600
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	setWindowIcon(window, "textures/citrus.png");
-	
-	// Initialize and load OpenGL function pointers
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		printf("Failed to initialize GLAD");
-		return -1;
-	}
-	
-	glEnable(GL_DEPTH_TEST);
+	GLFWwindow *window = initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "citrus.png", "OpenGLTestEnvironment");
 
 	////////////////////////////////////////////
 	/// Build and compile the shader program ///
@@ -204,9 +174,9 @@ int f_cubes()
 		checkESC(window);
 
 		// Calculate delta time
-		float currentFrame = glfwGetTime();
-		float deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame; 
+		float timeValue = glfwGetTime();
+		float deltaTime = timeValue - lastFrame;
+		lastFrame = timeValue; 
 		
 		// clear screen first
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -220,9 +190,6 @@ int f_cubes()
 		
 		// render with the shader program and vertex array(s) 
 		glUseProgram(shaderProgram);
-
-		float timeValue = glfwGetTime();
-		float blendValue;
 
 		// Finding the location of the shader uniforms
 		unsigned int modelLocation = glGetUniformLocation(shaderProgram, "model");
@@ -243,6 +210,8 @@ int f_cubes()
 		glm_perspective(glm_rad(45.0f), (float)SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f, projection);
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, *view.raw);
 		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection[0]);
+
+		float blendValue;
 
 		glBindVertexArray(VAO);
 		for(unsigned int i = 0; i < sizeof(cubePositions) / sizeof(vec3); i++)
