@@ -157,7 +157,7 @@ int f_coord_sys()
 	// Render Loop
 	while(!glfwWindowShouldClose(window))
 	{
-		processInput(window);
+		checkESC(window);
 		
 		// clear screen first
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

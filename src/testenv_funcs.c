@@ -33,7 +33,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 // Whenever the window size changed this callback function executes
-void processInput(GLFWwindow *window)
+void checkESC(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);

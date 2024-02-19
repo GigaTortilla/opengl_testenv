@@ -6,7 +6,7 @@
 
 void setWindowIcon(GLFWwindow* window, const char* path);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
+void checkESC(GLFWwindow *window);
 
 int f_blending();
 int f_hello_triangle();
