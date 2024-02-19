@@ -1,6 +1,7 @@
 #include <cam.h>
 
-void updatePos(Camera* cam, GLFWwindow* window) {
+void updatePos(Camera* cam, GLFWwindow* window, float frameDiff) {
+	cam->speed = CAM_SPEED * frameDiff;
 	vec3s moveVec = {{ 0.0f, 0.0f, 0.0f }};
 	if (glfwGetKey(window, GLFW_KEY_W))
 		moveVec = glms_vec3_add(moveVec, moveForward(cam));

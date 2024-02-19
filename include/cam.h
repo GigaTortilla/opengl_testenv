@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <cglm/struct.h>
 
-#define CAM_SPEED 0.05f
+#define CAM_SPEED 2.5f
 
 typedef struct
 {
@@ -16,7 +16,7 @@ typedef struct
     float speed;
 } Camera;
 
-void updatePos(Camera* cam, GLFWwindow* window);
+void updatePos(Camera* cam, GLFWwindow* window, float frameDiff);
 vec3s moveForward(Camera* cam);
 vec3s moveRight(Camera* cam);
 vec3s moveBackward(Camera* cam);

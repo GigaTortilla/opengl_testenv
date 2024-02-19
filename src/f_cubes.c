@@ -25,6 +25,8 @@ int f_cubes()
 		.speed = 0.05f
 	};
 
+	float lastFrame = 0.0f;
+
 	// Initialize and configure GLFW
 	glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -200,6 +202,11 @@ int f_cubes()
 	while(!glfwWindowShouldClose(window))
 	{
 		checkESC(window);
+
+		// Calculate delta time
+		float currentFrame = glfwGetTime();
+		float deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame; 
 		
 		// clear screen first
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -229,7 +236,7 @@ int f_cubes()
 		glm_mat4_identity(projection);
 
 		// Calculating the view matrix
-		updatePos(&cam, window);
+		updatePos(&cam, window, deltaTime);
 		mat4s view = glms_lookat(cam.pos, glms_vec3_add(cam.pos, cam.front), cam.up);
 		
 		// Transformation matrix calculations and sending them to the shader
