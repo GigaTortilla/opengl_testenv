@@ -115,53 +115,20 @@ int f_cubes()
 	glBindVertexArray(0);
 	
 	// This block of code loads and binds the texture ressources
-	int width, height, nrChannels;
-	unsigned int texture1, texture2;
 	stbi_set_flip_vertically_on_load(GL_TRUE);
-	glGenTextures(1, &texture1);
-	glGenTextures(1, &texture2);
 	
-	glBindTexture(GL_TEXTURE_2D, texture1);
-	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
-	unsigned char *data = stbi_load("textures/container.jpg", &width, &height, &nrChannels, 0);
-	if(data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else 
-	{
-		printf("Texture could not be loaded!");
-	}
-	stbi_image_free(data);
-	
-	glBindTexture(GL_TEXTURE_2D, texture2);
-	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
-	data = stbi_load("textures/awesomeface.png", &width, &height, &nrChannels, 0);
-	if(data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else 
-	{
-		printf("Texture could not be loaded!");
-	}
-	stbi_image_free(data);
+	unsigned int texture1 = genBindTexRepeat("textures/container.jpg");
+	unsigned int texture2 = genBindTexRepeat("textures/awesomeface.png");
 	
 	glUseProgram(shaderProgram);
 	glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
 	glUniform1i(glGetUniformLocation(shaderProgram, "texture2"), 1);
+
+	// Finding the location of the shader uniforms
+	unsigned int modelLocation = glGetUniformLocation(shaderProgram, "model");
+	unsigned int viewLocation = glGetUniformLocation(shaderProgram, "view");
+	unsigned int projectionLocation = glGetUniformLocation(shaderProgram, "projection");
+	unsigned int blendLocation = glGetUniformLocation(shaderProgram, "blend");
 
 	//////////////////////
 	/// Wireframe Mode ///
@@ -190,12 +157,6 @@ int f_cubes()
 		
 		// render with the shader program and vertex array(s) 
 		glUseProgram(shaderProgram);
-
-		// Finding the location of the shader uniforms
-		unsigned int modelLocation = glGetUniformLocation(shaderProgram, "model");
-		unsigned int viewLocation = glGetUniformLocation(shaderProgram, "view");
-		unsigned int projectionLocation = glGetUniformLocation(shaderProgram, "projection");
-		unsigned int blendLocation = glGetUniformLocation(shaderProgram, "blend");
 		
 		// Transformation matrices
 		mat4 model, projection;
