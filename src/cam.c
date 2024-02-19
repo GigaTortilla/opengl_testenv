@@ -1,6 +1,6 @@
 #include <cam.h>
 
-void updatePos(Camera* cam, GLFWwindow* window, float frameDiff) {
+void updateCam(Camera* cam, GLFWwindow* window, float frameDiff) {
 	cam->speed = CAM_SPEED * frameDiff;
 	vec3s moveVec = {{ 0.0f, 0.0f, 0.0f }};
 	if (glfwGetKey(window, GLFW_KEY_W))
@@ -14,6 +14,13 @@ void updatePos(Camera* cam, GLFWwindow* window, float frameDiff) {
 	moveVec = glms_normalize(moveVec);
 
 	cam->pos = glms_vec3_add(cam->pos, glms_vec3_scale(moveVec, cam->speed));
+
+	vec3s direction = {{
+		direction.x = cos(glm_rad(cam->yawAngle)) * cos(glm_rad(cam->pitchAngle)),
+		direction.y = sin(glm_rad(cam->pitchAngle)),
+		direction.z = sin(glm_rad(cam->yawAngle)) * cos(glm_rad(cam->pitchAngle))
+	}};
+	cam->front = glms_normalize(direction);
 }
 
 vec3s moveForward(Camera* cam) {

@@ -16,25 +16,25 @@
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
+Camera cam = {
+	.pos = {{ 0.0f, 0.0f, 4.0f }},
+	.front = {{ 0.0f, 0.0f, -1.0f }},
+	.right = {{ 1.0f, 0.0f, 0.0f }},
+	.up = {{ 0.0f, 1.0f, 0.0f }},
+	.speed = 0.05f,
+
+	.firstMouse = true,
+	.lastMouseX = 0.0f,
+	.lastMouseY = 0.0f,
+
+	.yawAngle = -90.0f,
+	.pitchAngle = 0.0f
+};
+
+void mouseCallback(GLFWwindow* window, double xPos, double yPos);
+
 int f_cubes()
 {
-	Camera cam = {
-		.front = {{ 0.0f, 0.0f, -1.0f }},
-		.pos = {{ 0.0f, 0.0f, 4.0f }},
-		.right = {{ 1.0f, 0.0f, 0.0f }},
-		.up = {{ 0.0f, 1.0f, 0.0f }},
-		.speed = 0.05f
-	};
-
-	float lastFrame = 0.0f;
-
-	GLFWwindow *window = initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "citrus.png", "OpenGLTestEnvironment");
-
-	////////////////////////////////////////////
-	/// Build and compile the shader program ///
-	////////////////////////////////////////////
-	unsigned int shaderProgram = buildShaderProgram("cubeShader.vert", "cubeShader.frag");
-
 	// Vertices and position array 
 	// for displaying cubes
 	float vertices[] = {
@@ -92,7 +92,17 @@ int f_cubes()
 		{  1.5f,  2.0f, -2.5f }, 
 		{  1.5f,  0.2f, -1.5f }, 
 		{ -1.3f,  1.0f, -1.5f }  
-};
+	};
+
+	float lastFrame = 0.0f;
+
+	GLFWwindow *window = initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "citrus.png", "OpenGLTestEnvironment");
+
+	// hide and capture cursor
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPosCallback(window, mouseCallback);
+
+	unsigned int shaderProgram = buildShaderProgram("cubeShader.vert", "cubeShader.frag");
 	
 	// Set up Vertex Buffer Object and Vertex Array Object
 	unsigned int VBO, VAO;
@@ -164,7 +174,7 @@ int f_cubes()
 		glm_mat4_identity(projection);
 
 		// Calculating the view matrix
-		updatePos(&cam, window, deltaTime);
+		updateCam(&cam, window, deltaTime);
 		mat4s view = glms_lookat(cam.pos, glms_vec3_add(cam.pos, cam.front), cam.up);
 		
 		// Transformation matrix calculations and sending them to the shader
@@ -199,4 +209,31 @@ int f_cubes()
 	
 	glfwTerminate();
 	return 0;
+}
+
+void mouseCallback(GLFWwindow* window, double xPos, double yPos)
+{
+	if(cam.firstMouse)
+	{
+		cam.lastMouseX = xPos;
+		cam.lastMouseY = yPos;
+		cam.firstMouse = false;
+	}
+
+	float offsetX = xPos - cam.lastMouseX;
+	float offsetY = cam.lastMouseY - yPos;
+	cam.lastMouseX = xPos;
+	cam.lastMouseY = yPos;
+
+	float sensitivity = 0.1f;
+	offsetX *= sensitivity;
+	offsetY *= sensitivity;
+
+	cam.yawAngle += offsetX;
+	cam.pitchAngle += offsetY;
+
+	if(cam.pitchAngle > 89.0f)
+		cam.pitchAngle = 89.0f;
+	if(cam.pitchAngle < -89.0f)
+		cam.pitchAngle = -89.0f;
 }
