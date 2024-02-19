@@ -53,7 +53,10 @@ int f_cubes()
 	////////////////////////////////////////////
 	unsigned int shaderProgram = buildShaderProgram("cubeShader.vert", "cubeShader.frag");
 
+	// Vertices and position array 
+	// for displaying cubes
 	float vertices[] = {
+		// x y z coords		 // texture coords
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
 		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -129,6 +132,7 @@ int f_cubes()
 	// since VAOs require a call to glBindVertexArray to be modified anyways
 	glBindVertexArray(0);
 	
+	// This block of code loads and binds the texture ressources
 	int width, height, nrChannels;
 	unsigned int texture1, texture2;
 	stbi_set_flip_vertically_on_load(GL_TRUE);
@@ -177,6 +181,8 @@ int f_cubes()
 	glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
 	glUniform1i(glGetUniformLocation(shaderProgram, "texture2"), 1);
 
+	
+
 	//////////////////////
 	/// Wireframe Mode ///
 	//////////////////////
@@ -201,7 +207,7 @@ int f_cubes()
 		glUseProgram(shaderProgram);
 
 		float timeValue = glfwGetTime();
-		float blendValue;
+		float blendValue, camX, camZ;
 
 		// Finding the location of the shader uniforms
 		unsigned int modelLocation = glGetUniformLocation(shaderProgram, "model");
@@ -209,13 +215,34 @@ int f_cubes()
 		unsigned int projectionLocation = glGetUniformLocation(shaderProgram, "projection");
 		unsigned int blendLocation = glGetUniformLocation(shaderProgram, "blend");
 		
+		// Transformation matrices
 		mat4 model, view, projection;
 		glm_mat4_identity(model);
 		glm_mat4_identity(view);
 		glm_mat4_identity(projection);
+
+		//////////////////////
+		/// Camera vectors ///
+		//////////////////////
+		camX = 10.0f * sin(timeValue);
+		camZ = 10.0f * cos(timeValue);
+
+		vec3 upVector = { 0.0f, 1.0f, 0.0f };
+		vec3 cameraPos = { camX, 0.0f, camZ };
+		vec3 cameraTarget = { 0.0f, 0.0f, 0.0f };
+		vec3 cameraDirection, cameraUp, cameraRight;
+
+		// Camera vector calculations
+		glm_vec3_sub(cameraPos, cameraTarget, cameraDirection);
+		glm_normalize_to(cameraDirection, cameraDirection);
+		glm_cross(upVector, cameraDirection, cameraRight);
+		glm_normalize(cameraRight);
+		glm_cross(cameraDirection, cameraRight, cameraUp);
+
+		// Calculating the view matrix
+		glm_lookat(cameraPos, cameraTarget, cameraUp, view);
 		
 		// Transformation matrix calculations and sending them to the shader
-		glm_translate(view, (vec3) { 0.0f, 0.0f, -5.0f });
 		glm_perspective(glm_rad(45.0f), (float)SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f, projection);
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, view[0]);
 		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection[0]);
