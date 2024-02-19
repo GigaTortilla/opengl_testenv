@@ -229,12 +229,12 @@ int f_cubes()
 		glm_mat4_identity(projection);
 
 		// Calculating the view matrix
-		cam_updatePos(&cam, window);
+		updatePos(&cam, window);
 		mat4s view = glms_lookat(cam.pos, glms_vec3_add(cam.pos, cam.front), cam.up);
 		
 		// Transformation matrix calculations and sending them to the shader
 		glm_perspective(glm_rad(45.0f), (float)SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f, projection);
-		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, view.raw);
+		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, *view.raw);
 		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection[0]);
 
 		glBindVertexArray(VAO);

@@ -16,10 +16,10 @@ typedef struct
     float speed;
 } Camera;
 
-void cam_updatePos(Camera* cam, GLFWwindow* window);
-vec3s cam_moveForward(Camera* cam);
-vec3s cam_moveRight(Camera* cam);
-vec3s cam_moveBackward(Camera* cam);
-vec3s cam_moveLeft(Camera* cam);
+void updatePos(Camera* cam, GLFWwindow* window);
+vec3s moveForward(Camera* cam);
+vec3s moveRight(Camera* cam);
+vec3s moveBackward(Camera* cam);
+vec3s moveLeft(Camera* cam);
 
 #endif
