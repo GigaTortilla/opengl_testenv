@@ -14,6 +14,8 @@ typedef struct
     vec3s front;
     vec3s right;
     vec3s up;
+
+    float fov;
     float speed;
 
     bool firstMouse;

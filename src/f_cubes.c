@@ -16,22 +16,26 @@
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
+// Global camera struct
 Camera cam = {
 	.pos = {{ 0.0f, 0.0f, 4.0f }},
 	.front = {{ 0.0f, 0.0f, -1.0f }},
 	.right = {{ 1.0f, 0.0f, 0.0f }},
 	.up = {{ 0.0f, 1.0f, 0.0f }},
+
+	.fov = 45.0f,
 	.speed = 0.05f,
 
 	.firstMouse = true,
-	.lastMouseX = 0.0f,
-	.lastMouseY = 0.0f,
+	.lastMouseX = SCREEN_WIDTH / 2.0f,
+	.lastMouseY = SCREEN_HEIGHT / 2.0f,
 
 	.yawAngle = -90.0f,
 	.pitchAngle = 0.0f
 };
 
 void mouseCallback(GLFWwindow* window, double xPos, double yPos);
+void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 
 int f_cubes()
 {
@@ -101,6 +105,7 @@ int f_cubes()
 	// hide and capture cursor
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouseCallback);
+	glfwSetScrollCallback(window, scrollCallback);
 
 	unsigned int shaderProgram = buildShaderProgram("cubeShader.vert", "cubeShader.frag");
 	
@@ -178,7 +183,7 @@ int f_cubes()
 		mat4s view = glms_lookat(cam.pos, glms_vec3_add(cam.pos, cam.front), cam.up);
 		
 		// Transformation matrix calculations and sending them to the shader
-		glm_perspective(glm_rad(45.0f), (float)SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f, projection);
+		glm_perspective(glm_rad(cam.fov), (float)SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f, projection);
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, *view.raw);
 		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection[0]);
 
@@ -236,4 +241,13 @@ void mouseCallback(GLFWwindow* window, double xPos, double yPos)
 		cam.pitchAngle = 89.0f;
 	if(cam.pitchAngle < -89.0f)
 		cam.pitchAngle = -89.0f;
+}
+
+void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	cam.fov -= (float)yoffset;
+    if (cam.fov < 1.0f)
+        cam.fov = 1.0f;
+    if (cam.fov > 65.0f)
+        cam.fov = 65.0f; 
 }

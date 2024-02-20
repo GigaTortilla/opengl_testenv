@@ -21,6 +21,7 @@ void updateCam(Camera* cam, GLFWwindow* window, float frameDiff) {
 		direction.z = sin(glm_rad(cam->yawAngle)) * cos(glm_rad(cam->pitchAngle))
 	}};
 	cam->front = glms_normalize(direction);
+	cam->right = glms_normalize(glms_cross(cam->front, (vec3s){{ 0.0f, 1.0f, 0.0f }}));
 }
 
 vec3s moveForward(Camera* cam) {
