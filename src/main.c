@@ -4,6 +4,6 @@
 int main()
 {
 	int exitState;
-	exitState = f_cubes();
+	exitState = f_lighting();
 	return exitState;
 }

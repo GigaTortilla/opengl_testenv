@@ -34,8 +34,8 @@ Camera cam = {
 	.pitchAngle = 0.0f
 };
 
-void mouseCallback(GLFWwindow* window, double xPos, double yPos);
-void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+void mouseCallbackCubes(GLFWwindow* window, double xPos, double yPos);
+void scrollCallbackCubes(GLFWwindow* window, double xoffset, double yoffset);
 
 int f_cubes()
 {
@@ -104,8 +104,8 @@ int f_cubes()
 
 	// hide and capture cursor
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	glfwSetCursorPosCallback(window, mouseCallback);
-	glfwSetScrollCallback(window, scrollCallback);
+	glfwSetCursorPosCallback(window, mouseCallbackCubes);
+	glfwSetScrollCallback(window, scrollCallbackCubes);
 
 	unsigned int shaderProgram = buildShaderProgram("cubeShader.vert", "cubeShader.frag");
 	
@@ -216,7 +216,7 @@ int f_cubes()
 	return 0;
 }
 
-void mouseCallback(GLFWwindow* window, double xPos, double yPos)
+void mouseCallbackCubes(GLFWwindow* window, double xPos, double yPos)
 {
 	if(cam.firstMouse)
 	{
@@ -243,7 +243,7 @@ void mouseCallback(GLFWwindow* window, double xPos, double yPos)
 		cam.pitchAngle = -89.0f;
 }
 
-void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+void scrollCallbackCubes(GLFWwindow* window, double xoffset, double yoffset)
 {
 	cam.fov -= (float)yoffset;
     if (cam.fov < 1.0f)
