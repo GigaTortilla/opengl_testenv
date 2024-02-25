@@ -111,3 +111,34 @@ unsigned int genBindTexRepeat(char* imagePath)
 	stbi_image_free(data);
 	return texture;
 }
+
+unsigned int genBindTexClamp2Edge(char* imagePath)
+{
+	unsigned int texture;
+	int width, height, nrChannels;
+	glGenTextures(1, &texture);
+	
+	glBindTexture(GL_TEXTURE_2D, texture);
+	
+	// Texture parameter settings
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	
+	unsigned char *data = stbi_load(imagePath, &width, &height, &nrChannels, 0);
+	if(data)
+	{
+		if(nrChannels == 3)
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		else if(nrChannels == 4)
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else 
+	{
+		printf("Texture could not be loaded!");
+	}
+	stbi_image_free(data);
+	return texture;
+}
