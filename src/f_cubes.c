@@ -216,6 +216,9 @@ int f_cubes()
 	return 0;
 }
 
+// Callback function has a predetermined structure, thus the unused parameter warning is supressed
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 void mouseCallbackCubes(GLFWwindow* window, double xPos, double yPos)
 {
 	if(cam.firstMouse)
@@ -242,7 +245,11 @@ void mouseCallbackCubes(GLFWwindow* window, double xPos, double yPos)
 	if(cam.pitchAngle < -89.0f)
 		cam.pitchAngle = -89.0f;
 }
+#pragma GCC diagnostic pop
 
+// Callback function has a predetermined structure, thus the unused parameter warning is supressed
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 void scrollCallbackCubes(GLFWwindow* window, double xoffset, double yoffset)
 {
 	cam.fov -= (float)yoffset;
@@ -251,3 +258,4 @@ void scrollCallbackCubes(GLFWwindow* window, double xoffset, double yoffset)
     if (cam.fov > 65.0f)
         cam.fov = 65.0f; 
 }
+#pragma GCC diagnostic pop

@@ -27,11 +27,15 @@ void setWindowIcon(GLFWwindow* window, const char* path)
 	stbi_image_free(icons[0].pixels);
 }
 
+// Callback function has a predetermined structure, thus the unused parameter warning is supressed
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 // Processes all inputs for the render loop
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
+#pragma GCC diagnostic pop
 
 // Whenever the window size changed this callback function executes
 void checkESC(GLFWwindow *window)

@@ -216,6 +216,9 @@ int f_lighting()
 	return 0;
 }
 
+// Callback function has a predetermined structure, thus the unused parameter warning is supressed
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 void mouseCallbackLight(GLFWwindow* window, double xPos, double yPos)
 {
 	if(cam_light.firstMouse)
@@ -242,7 +245,11 @@ void mouseCallbackLight(GLFWwindow* window, double xPos, double yPos)
 	if(cam_light.pitchAngle < -89.0f)
 		cam_light.pitchAngle = -89.0f;
 }
+#pragma GCC diagnostic pop
 
+// Callback function has a predetermined structure, thus the unused parameter warning is supressed
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 void scrollCallbackLight(GLFWwindow* window, double xoffset, double yoffset)
 {
 	cam_light.fov -= (float)yoffset;
@@ -251,3 +258,4 @@ void scrollCallbackLight(GLFWwindow* window, double xoffset, double yoffset)
     if (cam_light.fov > 65.0f)
         cam_light.fov = 65.0f; 
 }
+#pragma GCC diagnostic pop
