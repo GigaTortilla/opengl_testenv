@@ -39,51 +39,51 @@ void scrollCallbackLight(GLFWwindow* window, double xoffset, double yoffset);
 
 int f_lighting()
 {
-	// Vertices array 
-	// Serves as data for displaying cubes. 
+	// Vertices array serves as data for displaying cubes. 
 	float vertices[] = {
-        -0.5f, -0.5f, -0.5f, 
-         0.5f, -0.5f, -0.5f,  
-         0.5f,  0.5f, -0.5f,  
-         0.5f,  0.5f, -0.5f,  
-        -0.5f,  0.5f, -0.5f, 
-        -0.5f, -0.5f, -0.5f, 
+	// Position			 // Normal vector
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
 
-        -0.5f, -0.5f,  0.5f, 
-         0.5f, -0.5f,  0.5f,  
-         0.5f,  0.5f,  0.5f,  
-         0.5f,  0.5f,  0.5f,  
-        -0.5f,  0.5f,  0.5f, 
-        -0.5f, -0.5f,  0.5f, 
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
 
-        -0.5f,  0.5f,  0.5f, 
-        -0.5f,  0.5f, -0.5f, 
-        -0.5f, -0.5f, -0.5f, 
-        -0.5f, -0.5f, -0.5f, 
-        -0.5f, -0.5f,  0.5f, 
-        -0.5f,  0.5f,  0.5f, 
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-         0.5f,  0.5f,  0.5f,  
-         0.5f,  0.5f, -0.5f,  
-         0.5f, -0.5f, -0.5f,  
-         0.5f, -0.5f, -0.5f,  
-         0.5f, -0.5f,  0.5f,  
-         0.5f,  0.5f,  0.5f,  
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-        -0.5f, -0.5f, -0.5f, 
-         0.5f, -0.5f, -0.5f,  
-         0.5f, -0.5f,  0.5f,  
-         0.5f, -0.5f,  0.5f,  
-        -0.5f, -0.5f,  0.5f, 
-        -0.5f, -0.5f, -0.5f, 
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-        -0.5f,  0.5f, -0.5f, 
-         0.5f,  0.5f, -0.5f,  
-         0.5f,  0.5f,  0.5f,  
-         0.5f,  0.5f,  0.5f,  
-        -0.5f,  0.5f,  0.5f, 
-        -0.5f,  0.5f, -0.5f, 
-    };
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+};
 
 	// Stores the time at the previous frame to calculate time differences between frames
 	float lastFrame = 0.0f;
@@ -92,13 +92,15 @@ int f_lighting()
 
 	// hide and capture cursor
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	// Bind callback functions
 	glfwSetCursorPosCallback(window, mouseCallbackLight);
 	glfwSetScrollCallback(window, scrollCallbackLight);
 
 	// Build the shader programs
 	// Since both programs use the same functions in the vertex shader stage, using the same vertex shader file is a good option
 	unsigned int colorShaderProgram = buildShaderProgram("colorShader.vert", "colorShader.frag");
-	unsigned int lightShaderProgram = buildShaderProgram("colorShader.vert", "lightCube.frag");
+	unsigned int lightShaderProgram = buildShaderProgram("lightCube.vert", "lightCube.frag");
 	
 	// Set up Vertex Buffer Object and Vertex Array Object
 	unsigned int VBO, cubeVAO, lightVAO;
@@ -111,15 +113,19 @@ int f_lighting()
 	
 	glBindVertexArray(cubeVAO);
 	// Position attribute at attribute position 0 in the vertex shader layout
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
 	glEnableVertexAttribArray(0);
+	// Normal vector attribute at attribute position 1 in the vertex shader layout
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	// Repeat this process for the lightVAO 
 	// We only need to bind the VBO again to set glVertexAttribPointer
 	glBindVertexArray(lightVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	// Position attribute at attribute position 0 in the vertex shader layout
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+	// Updated only the lamps position attribute stride since we don't want to shade the light cube differently 
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
 	glEnableVertexAttribArray(0);
 
 	// Finding the location of the shader uniforms
@@ -134,6 +140,7 @@ int f_lighting()
 
 	unsigned int objectColorLocation = glGetUniformLocation(colorShaderProgram, "objectColor");
 	unsigned int lightColorLocation = glGetUniformLocation(colorShaderProgram, "lightColor");
+	unsigned int lightPosLocation = glGetUniformLocation(colorShaderProgram, "lightPos");
 	
 	// lighting
 	vec3 lightPos = { 1.2f, 1.0f, 2.0f };
@@ -158,6 +165,8 @@ int f_lighting()
 		// clear screen first
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		// render with the shader program and vertex array(s) 
 		glUseProgram(colorShaderProgram);
@@ -165,6 +174,8 @@ int f_lighting()
 		// Set object and light color
 		glUniform3fv(objectColorLocation, 1, objectColor);
 		glUniform3fv(lightColorLocation, 1, lightColor);
+		// Send the light position to the objects shader
+		glUniform3fv(lightPosLocation, 1, lightPos);
 		
 		// Transformation matrices
 		mat4 lightModel, cubeModel, projection;
@@ -175,17 +186,21 @@ int f_lighting()
 		updateCam(&cam_light, window, deltaTime);
 		mat4s view = glms_lookat(cam_light.pos, glms_vec3_add(cam_light.pos, cam_light.front), cam_light.up);
 		
-		// Transformation matrix calculations and sending them to the shaders
+		// Projection matrix calculation
 		glm_perspective(glm_rad(cam_light.fov), (float)SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f, projection);
 
+		// Sending the view and transformation matrix to the shader program
 		glUniformMatrix4fv(cubeViewLocation, 1, GL_FALSE, *view.raw);
 		glUniformMatrix4fv(cubeProjectionLocation, 1, GL_FALSE, projection[0]);
 
 		// Set the cube position in the world
 		glUniformMatrix4fv(cubeModelLocation, 1, GL_FALSE, cubeModel[0]);
 
+
 		glBindVertexArray(cubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		// render with the shader program and vertex array(s) 
 		glUseProgram(lightShaderProgram);
@@ -219,6 +234,7 @@ int f_lighting()
 // Callback function has a predetermined structure, thus the unused parameter warning is supressed
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
+// Callback function to enable camera control using the mouse cursor
 void mouseCallbackLight(GLFWwindow* window, double xPos, double yPos)
 {
 	if(cam_light.firstMouse)
@@ -250,6 +266,7 @@ void mouseCallbackLight(GLFWwindow* window, double xPos, double yPos)
 // Callback function has a predetermined structure, thus the unused parameter warning is supressed
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
+// Callback function to scrolling zoom
 void scrollCallbackLight(GLFWwindow* window, double xoffset, double yoffset)
 {
 	cam_light.fov -= (float)yoffset;
