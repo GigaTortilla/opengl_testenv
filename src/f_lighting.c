@@ -142,6 +142,7 @@ int f_lighting()
 	unsigned int objectColorLocation = glGetUniformLocation(colorShaderProgram, "objectColor");
 	unsigned int lightColorLocation = glGetUniformLocation(colorShaderProgram, "lightColor");
 	unsigned int lightPosLocation = glGetUniformLocation(colorShaderProgram, "lightPos");
+	unsigned int viewPosLocation = glGetUniformLocation(colorShaderProgram, "viewPos");
 	
 	// lighting
 	vec3 lightPos = { 1.2f, 1.0f, 2.0f };
@@ -177,8 +178,9 @@ int f_lighting()
 		// Set object and light color
 		glUniform3fv(objectColorLocation, 1, objectColor);
 		glUniform3fv(lightColorLocation, 1, lightColor);
-		// Send the light position to the objects shader
+		// Send the light and camera position to the objects shader
 		glUniform3fv(lightPosLocation, 1, lightPos);
+		glUniform3fv(viewPosLocation, 1, cam_light.pos.raw);
 		
 		// Transformation matrices
 		mat4 projection;
