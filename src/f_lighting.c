@@ -205,7 +205,7 @@ int f_lighting()
 		mat4s cubeModelInv = glms_mat4_inv(cubeModel);
 		// Set the cube position in the world
 		glUniformMatrix4fv(cubeModelLocation, 1, GL_FALSE, *cubeModel.raw);
-		glUniformMatrix4fv(cubeModelInvLocation, 1, GL_FALSE, *cubeModelInv.raw);
+		glUniformMatrix4fv(cubeModelInvLocation, 1, GL_TRUE, *cubeModelInv.raw);
 
 		glBindVertexArray(cubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);

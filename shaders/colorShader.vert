@@ -14,7 +14,7 @@ void main()
 {
     // multiplying the transpose of the inverse of the upper left 3x3 part of the 4x4 model matrix
     // with the normal vector transforms it to world space
-    normalVec = mat3(transpose(modelInv)) * aNormalVec;
+    normalVec = mat3(modelInv) * aNormalVec;
     fragPos = vec3(model * vec4(aPos, 1.0));
     gl_Position = projection * view * model * vec4(aPos, 1.0);
 } 
