@@ -131,6 +131,7 @@ int f_lighting()
 	// Finding the location of the shader uniforms
 
 	unsigned int cubeModelLocation = glGetUniformLocation(colorShaderProgram, "model");
+	unsigned int cubeModelInvLocation = glGetUniformLocation(colorShaderProgram, "modelInv");
 	unsigned int cubeViewLocation = glGetUniformLocation(colorShaderProgram, "view");
 	unsigned int cubeProjectionLocation = glGetUniformLocation(colorShaderProgram, "projection");
 
@@ -166,7 +167,9 @@ int f_lighting()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////
+		///// Colored cube /////
+		////////////////////////
 		
 		// render with the shader program and vertex array(s) 
 		glUseProgram(colorShaderProgram);
@@ -178,9 +181,9 @@ int f_lighting()
 		glUniform3fv(lightPosLocation, 1, lightPos);
 		
 		// Transformation matrices
-		mat4 lightModel, cubeModel, projection;
-		glm_mat4_identity(cubeModel);
+		mat4 projection;
 		glm_mat4_identity(projection);
+		mat4s cubeModel = glms_mat4_identity();
 
 		// Calculating the view matrix
 		updateCam(&cam_light, window, deltaTime);
@@ -193,14 +196,17 @@ int f_lighting()
 		glUniformMatrix4fv(cubeViewLocation, 1, GL_FALSE, *view.raw);
 		glUniformMatrix4fv(cubeProjectionLocation, 1, GL_FALSE, projection[0]);
 
+		mat4s cubeModelInv = glms_mat4_inv(cubeModel);
 		// Set the cube position in the world
-		glUniformMatrix4fv(cubeModelLocation, 1, GL_FALSE, cubeModel[0]);
-
+		glUniformMatrix4fv(cubeModelLocation, 1, GL_FALSE, *cubeModel.raw);
+		glUniformMatrix4fv(cubeModelInvLocation, 1, GL_FALSE, *cubeModelInv.raw);
 
 		glBindVertexArray(cubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////
+		///// Light cube /////
+		//////////////////////
 		
 		// render with the shader program and vertex array(s) 
 		glUseProgram(lightShaderProgram);
@@ -209,6 +215,7 @@ int f_lighting()
 		glUniformMatrix4fv(lightProjectionLocation, 1, GL_FALSE, projection[0]);
 		
 		// Also set the light cube position in the world
+		mat4 lightModel;
 		glm_mat4_identity(lightModel);
 		glm_translate(lightModel, lightPos);
 		glm_scale(lightModel, (vec3) { 0.2f, 0.2f, 0.2f });
