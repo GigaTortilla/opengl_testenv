@@ -18,7 +18,7 @@
 
 // Global camera struct initialization
 Camera cam_light = {
-	.pos = {{ 0.0f, 0.0f, 4.0f }},
+	.pos = {{ -1.5f, 0.0f, 5.0f }},
 	.front = {{ 0.0f, 0.0f, -1.0f }},
 	.right = {{ 1.0f, 0.0f, 0.0f }},
 	.up = {{ 0.0f, 1.0f, 0.0f }},
@@ -145,7 +145,7 @@ int f_lighting()
 	unsigned int viewPosLocation = glGetUniformLocation(colorShaderProgram, "viewPos");
 	
 	// lighting
-	vec3 lightPos = { 1.2f, 1.0f, 2.0f };
+	vec3s cubePos = {{ 0.0f, -1.0f, 0.0f }};
 	vec3 objectColor = { 1.0f, 0.5f, 0.31f };
 	vec3 lightColor = { 1.0f, 1.0f, 1.0f };
 
@@ -167,6 +167,9 @@ int f_lighting()
 		// clear screen first
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		// Update light cube position
+		vec3 lightPos = { cubePos.x + 2.5f * sin(timeValue), cubePos.y + 1.0f, cubePos.z + 2.5f * cos(timeValue) };
 
 		////////////////////////
 		///// Colored cube /////
@@ -186,6 +189,7 @@ int f_lighting()
 		mat4 projection;
 		glm_mat4_identity(projection);
 		mat4s cubeModel = glms_mat4_identity();
+		cubeModel = glms_translate(cubeModel, cubePos);
 
 		// Calculating the view matrix
 		updateCam(&cam_light, window, deltaTime);
