@@ -6,7 +6,7 @@
 #include <cglm/cglm.h>
 #include <cglm/struct.h>
 #include <myshaders.h>
-#include <cam.h>
+#include <camera/cam.h>
 #include <testenv_funcs.h>
 
 // WARNING: #define STB_IMAGE_IMPLEMENTATION in main.c

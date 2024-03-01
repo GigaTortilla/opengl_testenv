@@ -1,6 +1,6 @@
-#include <cam.h>
+#include <camera/cam.h>
 
-void updateCam(Camera* cam, GLFWwindow* window, float frameDiff) {
+void CALL updateCam(Camera* cam, GLFWwindow* window, float frameDiff) {
 	cam->speed = CAM_SPEED * frameDiff;
 	vec3s moveVec = {{ 0.0f, 0.0f, 0.0f }};
 	if (glfwGetKey(window, GLFW_KEY_W))
@@ -24,25 +24,25 @@ void updateCam(Camera* cam, GLFWwindow* window, float frameDiff) {
 	cam->right = glms_normalize(glms_cross(cam->front, (vec3s){{ 0.0f, 1.0f, 0.0f }}));
 }
 
-vec3s moveForward(Camera* cam) {
+vec3s CALL moveForward(Camera* cam) {
 	vec3s toScale = {{ cam->front.x, 0.0f, cam->front.z }};
 	toScale = glms_vec3_normalize(toScale);
 	return toScale;
 }
 
-vec3s moveBackward(Camera* cam) {
+vec3s CALL moveBackward(Camera* cam) {
 	vec3s toScale = {{ -cam->front.x, 0.0f, -cam->front.z }};
 	toScale = glms_vec3_normalize(toScale);
 	return toScale;
 }
 
-vec3s moveRight(Camera* cam) {
+vec3s CALL moveRight(Camera* cam) {
 	vec3s toScale = {{ cam->right.x, 0.0f, cam->right.z }};
 	toScale = glms_vec3_normalize(toScale);
 	return toScale;
 }
 
-vec3s moveLeft(Camera* cam) {
+vec3s CALL moveLeft(Camera* cam) {
 	vec3s toScale = {{ -cam->right.x, 0.0f, -cam->right.z }};
 	toScale = glms_vec3_normalize(toScale);
 	return toScale;
