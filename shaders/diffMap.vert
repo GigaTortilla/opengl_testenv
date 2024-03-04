@@ -1,9 +1,11 @@
 #version 330 core
-layout (location = 0) in vec3 aPos;   		// the position variable has attribute position 0
-layout (location = 1) in vec3 aNormalVec;   // the normal vector to the vertices has attribute position 1
+layout (location = 0) in vec3 aPos;   		    // the position variable has attribute position 0
+layout (location = 1) in vec3 aNormalVec;       // the normal vector to the vertices has attribute position 1
+layout (location = 2) in vec2 aTextureCoords;   // texture coordinates have attribute position 2
 
 out vec3 normalVec;
 out vec3 fragPos;
+out vec2 texCoords;
 
 uniform mat4 model;
 uniform mat4 modelInv;
@@ -17,4 +19,5 @@ void main()
     // with the normal vector transforms it to world space
     normalVec = mat3(modelInv) * aNormalVec;
     fragPos = vec3(model * vec4(aPos, 1.0));
+    texCoords = aTextureCoords;
 } 
