@@ -3,6 +3,14 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <cglm/struct.h>
+
+typedef struct {
+    vec3s ambient;
+    vec3s diffuse;
+    vec3s specular;
+    float shininess;
+} Material;
 
 void setWindowIcon(GLFWwindow* window, const char* path);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);

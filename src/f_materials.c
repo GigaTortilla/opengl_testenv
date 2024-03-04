@@ -13,8 +13,8 @@
 #include <stb_image.h>
 
 // Screen constants
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
 
 // Global camera struct initialization
 Camera cam_mat = {
@@ -43,16 +43,16 @@ int f_materials()
 	float vertices[] = {
 		// Position			 // Normal vector
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
 		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
 
 		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
 		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
 		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
 
@@ -63,26 +63,38 @@ int f_materials()
 		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
 		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
 		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
 		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
 		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
 		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
 		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+	};
+	Material coral = {
+		.ambient = {{ 1.0f, 0.5f, 0.31f }},
+		.diffuse = {{ 1.0f, 0.5f, 0.31f }},
+		.specular = {{ 0.5f, 0.5f, 0.5f }},
+		.shininess = 0.5f
+	};
+	Material ruby = {
+		.ambient = {{ 0.1745f, 0.01175f, 0.01175f }},
+		.diffuse = {{ 0.61424f, 0.04136f, 0.04136f }},
+		.specular = {{ 0.727811f, 0.626959f, 0.626959f }},
+		.shininess = 0.6f
 	};
 
 	// Stores the time at the previous frame to calculate time differences between frames
@@ -201,10 +213,10 @@ int f_materials()
 		glUseProgram(colorShaderProgram);
 
 		// Set material properties for lighting
-		glUniform3fv(ambMaterialLocation, 1, (vec3) { 1.0f, 0.5f, 0.31f });
-		glUniform3fv(diffMaterialLocation, 1, (vec3) { 1.0f, 0.5f, 0.31f });
-		glUniform3fv(specMaterialLocation, 1, (vec3) { 0.5f, 0.5f, 0.5f });
-		glUniform1f(shininessMaterialLocation, 0.5f);
+		glUniform3fv(ambMaterialLocation, 1, coral.ambient.raw);
+		glUniform3fv(diffMaterialLocation, 1, coral.diffuse.raw);
+		glUniform3fv(specMaterialLocation, 1, coral.specular.raw);
+		glUniform1f(shininessMaterialLocation, coral.shininess);
 
 		// Set light color and position for the cubes shader stage
 		glUniform3fv(ambLightLocation, 1, glms_vec3_mul(lightColor, (vec3s) {{ 0.2f, 0.2f, 0.2f }}).raw);
