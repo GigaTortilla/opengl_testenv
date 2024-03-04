@@ -130,19 +130,25 @@ int f_lighting()
 
 	// Finding the location of the shader uniforms
 
+	// Colored cube shader program
 	unsigned int cubeModelLocation = glGetUniformLocation(colorShaderProgram, "model");
 	unsigned int cubeModelInvLocation = glGetUniformLocation(colorShaderProgram, "modelInv");
 	unsigned int cubeViewLocation = glGetUniformLocation(colorShaderProgram, "view");
 	unsigned int cubeProjectionLocation = glGetUniformLocation(colorShaderProgram, "projection");
 
+	// Light cube shader program
 	unsigned int lightModelLocation = glGetUniformLocation(lightShaderProgram, "model");
 	unsigned int lightViewLocation = glGetUniformLocation(lightShaderProgram, "view");
 	unsigned int lightProjectionLocation = glGetUniformLocation(lightShaderProgram, "projection");
 
-	unsigned int objectColorLocation = glGetUniformLocation(colorShaderProgram, "objectColor");
+	// Lighting uniforms in shader program
 	unsigned int lightColorLocation = glGetUniformLocation(colorShaderProgram, "lightColor");
 	unsigned int lightPosLocation = glGetUniformLocation(colorShaderProgram, "lightPos");
 	unsigned int viewPosLocation = glGetUniformLocation(colorShaderProgram, "viewPos");
+	unsigned int ambMaterialLocation = glGetUniformLocation(colorShaderProgram, "material.ambient");
+	unsigned int diffMaterialLocation = glGetUniformLocation(colorShaderProgram, "material.diffuse");
+	unsigned int specMaterialLocation = glGetUniformLocation(colorShaderProgram, "material.specular");
+	unsigned int shininessMaterialLocation = glGetUniformLocation(colorShaderProgram, "material.shininess");
 	
 	// lighting
 	vec3s cubePos = {{ 0.0f, -1.0f, 0.0f }};
@@ -178,9 +184,12 @@ int f_lighting()
 		// render with the shader program and vertex array(s) 
 		glUseProgram(colorShaderProgram);
 
-		// Set object and light color
-		glUniform3fv(objectColorLocation, 1, objectColor);
+		// Set light color and material properties for lighting
 		glUniform3fv(lightColorLocation, 1, lightColor);
+		glUniform3fv(ambMaterialLocation, 1, (vec3) { 1.0f, 0.5f, 0.31f });
+		glUniform3fv(diffMaterialLocation, 1, (vec3) { 1.0f, 0.5f, 0.31f });
+		glUniform3fv(specMaterialLocation, 1, (vec3) { 0.5f, 0.5f, 0.5f });
+		glUniform1f(shininessMaterialLocation, 0.5f);
 		// Send the light and camera position to the objects shader
 		glUniform3fv(lightPosLocation, 1, lightPos);
 		glUniform3fv(viewPosLocation, 1, cam_light.pos.raw);
