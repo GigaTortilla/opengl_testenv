@@ -213,14 +213,14 @@ int f_materials()
 		glUseProgram(colorShaderProgram);
 
 		// Set material properties for lighting
-		glUniform3fv(ambMaterialLocation, 1, coral.ambient.raw);
-		glUniform3fv(diffMaterialLocation, 1, coral.diffuse.raw);
-		glUniform3fv(specMaterialLocation, 1, coral.specular.raw);
-		glUniform1f(shininessMaterialLocation, coral.shininess);
+		glUniform3fv(ambMaterialLocation, 1, ruby.ambient.raw);
+		glUniform3fv(diffMaterialLocation, 1, ruby.diffuse.raw);
+		glUniform3fv(specMaterialLocation, 1, ruby.specular.raw);
+		glUniform1f(shininessMaterialLocation, ruby.shininess * 128.0f);
 
 		// Set light color and position for the cubes shader stage
-		glUniform3fv(ambLightLocation, 1, glms_vec3_mul(lightColor, (vec3s) {{ 0.2f, 0.2f, 0.2f }}).raw);
-		glUniform3fv(diffLightLocation, 1, glms_vec3_mul(lightColor, (vec3s) {{ 0.5f, 0.5f, 0.5f }}).raw);
+		glUniform3fv(ambLightLocation, 1, lightColor.raw);
+		glUniform3fv(diffLightLocation, 1, lightColor.raw);
 		glUniform3fv(specLightLocation, 1, lightColor.raw);
 		glUniform3fv(posLightLocation, 1, lightPos);
 
