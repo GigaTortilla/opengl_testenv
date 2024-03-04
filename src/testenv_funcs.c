@@ -3,6 +3,7 @@
 #include <string.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <cglm/struct.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -145,4 +146,30 @@ unsigned int genBindTexClamp2Edge(char* imagePath)
 	}
 	stbi_image_free(data);
 	return texture;
+}
+
+vec3s testColorStrobe(float t) 
+{
+	vec3s color;
+	color.r = 0.5f * sin(t) 				  + 0.5f;
+	color.g = 0.5f * sin(t + glm_rad(120.0f)) + 0.5f;
+	color.b = 0.5f * sin(t + glm_rad(240.0f)) + 0.5f;
+	return color;
+}
+
+/// @brief Updates the position of an object hovering around a specified point
+/// @param[in] pos  	Position coordinates to hover around
+/// @param[in] radius 	Distance from the specified position
+/// @param[in] freq 	Rotational frequency 
+/// @param[in] height 	Height above the specified point
+/// @param[in] t 		Current time for sine function
+/// @return         	The new position of the object as a vec3s
+/// @author 			GigaTortilla
+vec3s hoverAroundPoint(vec3s pos, float radius, float freq, float height, float t)
+{
+	vec3s newPos;
+	newPos.x = pos.x + radius * sin(freq * t);
+	newPos.y = pos.y + height;
+	newPos.z = pos.z + radius * cos(freq * t);
+	return newPos;
 }

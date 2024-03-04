@@ -177,7 +177,7 @@ int f_diffuseMap()
 
 	// lighting
 	vec3s cubePos = {{ 0.0f, -1.0f, 0.0f }};
-	vec3s lightColor = {{ 0.5f, 0.5f, 0.5f }};
+	vec3s lightColor = {{ 1.0f, 1.0f, 1.0f }};
 
 	//////////////////////
 	/// Wireframe Mode ///
@@ -195,9 +195,7 @@ int f_diffuseMap()
 		lastFrame = timeValue; 
 
 		// Update light color values
-		lightColor.r = 0.5f * (sin(timeValue) + 1.0f);
-		lightColor.g = 0.5f * (sin(timeValue + glm_rad(120.0f)) + 1.0f);
-		lightColor.b = 0.5f * (sin(timeValue + glm_rad(240.0f)) + 1.0f);
+		lightColor = testColorStrobe(timeValue);
 		
 		// clear screen first
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -208,7 +206,7 @@ int f_diffuseMap()
 		glBindTexture(GL_TEXTURE_2D, textureBox);
 		
 		// Update light cube position
-		vec3 lightPos = { cubePos.x + 2.5f /** sin(timeValue)*/, cubePos.y + 1.0f, cubePos.z + 2.5f /** cos(timeValue)*/ };
+		vec3s lightPos = hoverAroundPoint(cubePos, 2.5f, 0.8f, 0.9f, timeValue);
 
 		// Calculating the view matrix
 		updateCam(&cam_map, window, deltaTime);
@@ -233,10 +231,10 @@ int f_diffuseMap()
 		glUniform1f(shininessMaterialLocation, ruby.shininess * 128.0f);
 
 		// Set light color and position for the cubes shader stage
-		glUniform3fv(ambLightLocation, 1, lightColor.raw);
-		glUniform3fv(diffLightLocation, 1, lightColor.raw);
+		glUniform3fv(ambLightLocation, 1, glms_vec3_mul(lightColor, (vec3s) {{ 0.1f, 0.1f, 0.1f }}).raw);
+		glUniform3fv(diffLightLocation, 1, glms_vec3_mul(lightColor, (vec3s) {{ 0.5f, 0.5f, 0.5f }}).raw);
 		glUniform3fv(specLightLocation, 1, lightColor.raw);
-		glUniform3fv(posLightLocation, 1, lightPos);
+		glUniform3fv(posLightLocation, 1, lightPos.raw);
 
 		// Send the camera position to the objects shader
 		glUniform3fv(viewPosLocation, 1, cam_map.pos.raw);
@@ -275,11 +273,10 @@ int f_diffuseMap()
 		glUniformMatrix4fv(lightProjectionLocation, 1, GL_FALSE, projection[0]);
 		
 		// Also set the light cube position in the world
-		mat4 lightModel;
-		glm_mat4_identity(lightModel);
-		glm_translate(lightModel, lightPos);
-		glm_scale(lightModel, (vec3) { 0.2f, 0.2f, 0.2f });
-		glUniformMatrix4fv(lightModelLocation, 1, GL_FALSE, lightModel[0]);
+		mat4s lightModel = glms_mat4_identity();
+		lightModel = glms_translate(lightModel, lightPos);
+		lightModel = glms_scale(lightModel, (vec3s) {{ 0.2f, 0.2f, 0.2f }});
+		glUniformMatrix4fv(lightModelLocation, 1, GL_FALSE, *lightModel.raw);
 
 		glBindVertexArray(lightVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
