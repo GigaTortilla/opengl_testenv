@@ -182,7 +182,7 @@ int f_materials()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// Update light cube position
-		vec3 lightPos = { cubePos.x + 2.5f * sin(timeValue), cubePos.y + 1.0f, cubePos.z + 2.5f * cos(timeValue) };
+		vec3 lightPos = { cubePos.x + 2.5f /** sin(timeValue)*/, cubePos.y + 1.0f, cubePos.z + 2.5f /** cos(timeValue)*/ };
 
 		// Calculating the view matrix
 		updateCam(&cam_mat, window, deltaTime);
