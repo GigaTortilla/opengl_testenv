@@ -41,49 +41,49 @@ int f_materials()
 {
 	// Vertices array serves as data for displaying cubes. 
 	float vertices[] = {
-	// Position			 // Normal vector
-    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+		// Position			 // Normal vector
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
 
-    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
 
-    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-};
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+	};
 
 	// Stores the time at the previous frame to calculate time differences between frames
 	float lastFrame = 0.0f;
@@ -100,7 +100,7 @@ int f_materials()
 	// Build the shader programs
 	// Since both programs use the same functions in the vertex shader stage, using the same vertex shader file is a good option
 	unsigned int colorShaderProgram = buildShaderProgram("materials.vert", "materials.frag");
-	unsigned int lightShaderProgram = buildShaderProgram("lightCube.vert", "lightCube.frag");
+	unsigned int lightShaderProgram = buildShaderProgram("lightCube.vert", "lightMaterials.frag");
 	
 	// Set up Vertex Buffer Object and Vertex Array Object
 	unsigned int VBO, cubeVAO, lightVAO;
@@ -151,9 +151,11 @@ int f_materials()
 	unsigned int lightModelLocation = glGetUniformLocation(lightShaderProgram, "model");
 	unsigned int lightViewLocation = glGetUniformLocation(lightShaderProgram, "view");
 	unsigned int lightProjectionLocation = glGetUniformLocation(lightShaderProgram, "projection");
+	unsigned int lightColorLocation = glGetUniformLocation(lightShaderProgram, "lightColor");
 
 	// lighting
 	vec3s cubePos = {{ 0.0f, -1.0f, 0.0f }};
+	vec3s lightColor = {{ 0.5f, 0.5f, 0.5f }};
 
 	//////////////////////
 	/// Wireframe Mode ///
@@ -169,6 +171,11 @@ int f_materials()
 		float timeValue = glfwGetTime();
 		float deltaTime = timeValue - lastFrame;
 		lastFrame = timeValue; 
+
+		// Update light color values
+		lightColor.r = 0.5f * (sin(timeValue) + 1.0f);
+		lightColor.g = 0.5f * (sin(timeValue + glm_rad(120.0f)) + 1.0f);
+		lightColor.b = 0.5f * (sin(timeValue + glm_rad(240.0f)) + 1.0f);
 		
 		// clear screen first
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -177,6 +184,15 @@ int f_materials()
 		// Update light cube position
 		vec3 lightPos = { cubePos.x + 2.5f * sin(timeValue), cubePos.y + 1.0f, cubePos.z + 2.5f * cos(timeValue) };
 
+		// Calculating the view matrix
+		updateCam(&cam_mat, window, deltaTime);
+		mat4s view = glms_lookat(cam_mat.pos, glms_vec3_add(cam_mat.pos, cam_mat.front), cam_mat.up);
+		
+		// Projection matrix calculation
+		mat4 projection;
+		glm_mat4_identity(projection);
+		glm_perspective(glm_rad(cam_mat.fov), (float)SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f, projection);
+		
 		////////////////////////
 		///// Colored cube /////
 		////////////////////////
@@ -191,33 +207,26 @@ int f_materials()
 		glUniform1f(shininessMaterialLocation, 0.5f);
 
 		// Set light color and position for the cubes shader stage
-		glUniform3fv(ambLightLocation, 1, (vec3) { 0.2f, 0.2f, 0.2f });
-		glUniform3fv(diffLightLocation, 1, (vec3) { 0.5f, 0.5f, 0.5f });
-		glUniform3fv(specLightLocation, 1, (vec3) { 1.0f, 1.0f, 1.0f });
+		glUniform3fv(ambLightLocation, 1, glms_vec3_mul(lightColor, (vec3s) {{ 0.2f, 0.2f, 0.2f }}).raw);
+		glUniform3fv(diffLightLocation, 1, glms_vec3_mul(lightColor, (vec3s) {{ 0.5f, 0.5f, 0.5f }}).raw);
+		glUniform3fv(specLightLocation, 1, lightColor.raw);
 		glUniform3fv(posLightLocation, 1, lightPos);
 
-		// Send the light and camera position to the objects shader
+		// Send the camera position to the objects shader
 		glUniform3fv(viewPosLocation, 1, cam_mat.pos.raw);
 		
-		// Transformation matrices
-		mat4 projection;
-		glm_mat4_identity(projection);
+		// Model matrix for the colored cube
 		mat4s cubeModel = glms_mat4_identity();
 		cubeModel = glms_translate(cubeModel, cubePos);
 
-		// Calculating the view matrix
-		updateCam(&cam_mat, window, deltaTime);
-		mat4s view = glms_lookat(cam_mat.pos, glms_vec3_add(cam_mat.pos, cam_mat.front), cam_mat.up);
-		
-		// Projection matrix calculation
-		glm_perspective(glm_rad(cam_mat.fov), (float)SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f, projection);
-
-		// Sending the view and transformation matrix to the shader program
+		// Sending the view and transformation matrices to the shader program
 		glUniformMatrix4fv(cubeViewLocation, 1, GL_FALSE, *view.raw);
 		glUniformMatrix4fv(cubeProjectionLocation, 1, GL_FALSE, projection[0]);
 
 		mat4s cubeModelInv = glms_mat4_inv(cubeModel);
-		// Set the cube position in the world
+		// Set the cube position in the world.
+		// Sending the transposed inverse of the model matrix to the vertex shader 
+		// for transforming the normal vectors to world space.
 		glUniformMatrix4fv(cubeModelLocation, 1, GL_FALSE, *cubeModel.raw);
 		glUniformMatrix4fv(cubeModelInvLocation, 1, GL_TRUE, *cubeModelInv.raw);
 
@@ -230,7 +239,12 @@ int f_materials()
 		
 		// render with the shader program and vertex array(s) 
 		glUseProgram(lightShaderProgram);
+
+		// Sending the light sources color to the shader to comply with cube lighting 
+		glUniform3fv(lightColorLocation, 1, lightColor.raw);
 		
+		// Send view and projection matrices to the vertex shader stage
+		// using the matrices calculated for the colored cube
 		glUniformMatrix4fv(lightViewLocation, 1, GL_FALSE, *view.raw);
 		glUniformMatrix4fv(lightProjectionLocation, 1, GL_FALSE, projection[0]);
 		
