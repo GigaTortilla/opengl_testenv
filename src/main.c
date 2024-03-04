@@ -3,7 +3,6 @@
 // no arguments should be passed to the application so no argc/argv here to see
 int main()
 {
-	int exitState;
-	exitState = f_lighting();
+	int exitState = f_materials();
 	return exitState;
 }

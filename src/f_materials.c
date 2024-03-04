@@ -17,7 +17,7 @@
 #define SCREEN_HEIGHT 600
 
 // Global camera struct initialization
-Camera cam_light = {
+Camera cam_mat = {
 	.pos = {{ -1.5f, 0.0f, 5.0f }},
 	.front = {{ 0.0f, 0.0f, -1.0f }},
 	.right = {{ 1.0f, 0.0f, 0.0f }},
@@ -34,10 +34,10 @@ Camera cam_light = {
 	.pitchAngle = 0.0f
 };
 
-void mouseCallbackLight(GLFWwindow* window, double xPos, double yPos);
-void scrollCallbackLight(GLFWwindow* window, double xoffset, double yoffset);
+void mouseCallbackMat(GLFWwindow* window, double xPos, double yPos);
+void scrollCallbackMat(GLFWwindow* window, double xoffset, double yoffset);
 
-int f_lighting()
+int f_materials()
 {
 	// Vertices array serves as data for displaying cubes. 
 	float vertices[] = {
@@ -94,12 +94,12 @@ int f_lighting()
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// Bind callback functions
-	glfwSetCursorPosCallback(window, mouseCallbackLight);
-	glfwSetScrollCallback(window, scrollCallbackLight);
+	glfwSetCursorPosCallback(window, mouseCallbackMat);
+	glfwSetScrollCallback(window, scrollCallbackMat);
 
 	// Build the shader programs
 	// Since both programs use the same functions in the vertex shader stage, using the same vertex shader file is a good option
-	unsigned int colorShaderProgram = buildShaderProgram("colorShader.vert", "colorShader.frag");
+	unsigned int colorShaderProgram = buildShaderProgram("materials.vert", "materials.frag");
 	unsigned int lightShaderProgram = buildShaderProgram("lightCube.vert", "lightCube.frag");
 	
 	// Set up Vertex Buffer Object and Vertex Array Object
@@ -136,23 +136,24 @@ int f_lighting()
 	unsigned int cubeViewLocation = glGetUniformLocation(colorShaderProgram, "view");
 	unsigned int cubeProjectionLocation = glGetUniformLocation(colorShaderProgram, "projection");
 
-	// Light cube shader program
-	unsigned int lightModelLocation = glGetUniformLocation(lightShaderProgram, "model");
-	unsigned int lightViewLocation = glGetUniformLocation(lightShaderProgram, "view");
-	unsigned int lightProjectionLocation = glGetUniformLocation(lightShaderProgram, "projection");
-
 	// Lighting uniforms in shader program
-	unsigned int lightColorLocation = glGetUniformLocation(colorShaderProgram, "lightColor");
-	unsigned int lightPosLocation = glGetUniformLocation(colorShaderProgram, "lightPos");
 	unsigned int viewPosLocation = glGetUniformLocation(colorShaderProgram, "viewPos");
 	unsigned int ambMaterialLocation = glGetUniformLocation(colorShaderProgram, "material.ambient");
 	unsigned int diffMaterialLocation = glGetUniformLocation(colorShaderProgram, "material.diffuse");
 	unsigned int specMaterialLocation = glGetUniformLocation(colorShaderProgram, "material.specular");
 	unsigned int shininessMaterialLocation = glGetUniformLocation(colorShaderProgram, "material.shininess");
+	unsigned int ambLightLocation = glGetUniformLocation(colorShaderProgram, "light.ambient");
+	unsigned int diffLightLocation = glGetUniformLocation(colorShaderProgram, "light.diffuse");
+	unsigned int specLightLocation = glGetUniformLocation(colorShaderProgram, "light.specular");
+	unsigned int posLightLocation = glGetUniformLocation(colorShaderProgram, "light.position");
 	
+	// Light cube shader program
+	unsigned int lightModelLocation = glGetUniformLocation(lightShaderProgram, "model");
+	unsigned int lightViewLocation = glGetUniformLocation(lightShaderProgram, "view");
+	unsigned int lightProjectionLocation = glGetUniformLocation(lightShaderProgram, "projection");
+
 	// lighting
 	vec3s cubePos = {{ 0.0f, -1.0f, 0.0f }};
-	vec3 lightColor = { 1.0f, 1.0f, 1.0f };
 
 	//////////////////////
 	/// Wireframe Mode ///
@@ -183,15 +184,20 @@ int f_lighting()
 		// render with the shader program and vertex array(s) 
 		glUseProgram(colorShaderProgram);
 
-		// Set light color and material properties for lighting
-		glUniform3fv(lightColorLocation, 1, lightColor);
+		// Set material properties for lighting
 		glUniform3fv(ambMaterialLocation, 1, (vec3) { 1.0f, 0.5f, 0.31f });
 		glUniform3fv(diffMaterialLocation, 1, (vec3) { 1.0f, 0.5f, 0.31f });
 		glUniform3fv(specMaterialLocation, 1, (vec3) { 0.5f, 0.5f, 0.5f });
 		glUniform1f(shininessMaterialLocation, 0.5f);
+
+		// Set light color and position for the cubes shader stage
+		glUniform3fv(ambLightLocation, 1, (vec3) { 0.2f, 0.2f, 0.2f });
+		glUniform3fv(diffLightLocation, 1, (vec3) { 0.5f, 0.5f, 0.5f });
+		glUniform3fv(specLightLocation, 1, (vec3) { 1.0f, 1.0f, 1.0f });
+		glUniform3fv(posLightLocation, 1, lightPos);
+
 		// Send the light and camera position to the objects shader
-		glUniform3fv(lightPosLocation, 1, lightPos);
-		glUniform3fv(viewPosLocation, 1, cam_light.pos.raw);
+		glUniform3fv(viewPosLocation, 1, cam_mat.pos.raw);
 		
 		// Transformation matrices
 		mat4 projection;
@@ -200,11 +206,11 @@ int f_lighting()
 		cubeModel = glms_translate(cubeModel, cubePos);
 
 		// Calculating the view matrix
-		updateCam(&cam_light, window, deltaTime);
-		mat4s view = glms_lookat(cam_light.pos, glms_vec3_add(cam_light.pos, cam_light.front), cam_light.up);
+		updateCam(&cam_mat, window, deltaTime);
+		mat4s view = glms_lookat(cam_mat.pos, glms_vec3_add(cam_mat.pos, cam_mat.front), cam_mat.up);
 		
 		// Projection matrix calculation
-		glm_perspective(glm_rad(cam_light.fov), (float)SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f, projection);
+		glm_perspective(glm_rad(cam_mat.fov), (float)SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f, projection);
 
 		// Sending the view and transformation matrix to the shader program
 		glUniformMatrix4fv(cubeViewLocation, 1, GL_FALSE, *view.raw);
@@ -256,31 +262,31 @@ int f_lighting()
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 // Callback function to enable camera control using the mouse cursor
-void mouseCallbackLight(GLFWwindow* window, double xPos, double yPos)
+void mouseCallbackMat(GLFWwindow* window, double xPos, double yPos)
 {
-	if(cam_light.firstMouse)
+	if(cam_mat.firstMouse)
 	{
-		cam_light.lastMouseX = xPos;
-		cam_light.lastMouseY = yPos;
-		cam_light.firstMouse = false;
+		cam_mat.lastMouseX = xPos;
+		cam_mat.lastMouseY = yPos;
+		cam_mat.firstMouse = false;
 	}
 
-	float offsetX = xPos - cam_light.lastMouseX;
-	float offsetY = cam_light.lastMouseY - yPos;
-	cam_light.lastMouseX = xPos;
-	cam_light.lastMouseY = yPos;
+	float offsetX = xPos - cam_mat.lastMouseX;
+	float offsetY = cam_mat.lastMouseY - yPos;
+	cam_mat.lastMouseX = xPos;
+	cam_mat.lastMouseY = yPos;
 
 	float sensitivity = 0.1f;
 	offsetX *= sensitivity;
 	offsetY *= sensitivity;
 
-	cam_light.yawAngle += offsetX;
-	cam_light.pitchAngle += offsetY;
+	cam_mat.yawAngle += offsetX;
+	cam_mat.pitchAngle += offsetY;
 
-	if(cam_light.pitchAngle > 89.0f)
-		cam_light.pitchAngle = 89.0f;
-	if(cam_light.pitchAngle < -89.0f)
-		cam_light.pitchAngle = -89.0f;
+	if(cam_mat.pitchAngle > 89.0f)
+		cam_mat.pitchAngle = 89.0f;
+	if(cam_mat.pitchAngle < -89.0f)
+		cam_mat.pitchAngle = -89.0f;
 }
 #pragma GCC diagnostic pop
 
@@ -288,12 +294,12 @@ void mouseCallbackLight(GLFWwindow* window, double xPos, double yPos)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 // Callback function to scrolling zoom
-void scrollCallbackLight(GLFWwindow* window, double xoffset, double yoffset)
+void scrollCallbackMat(GLFWwindow* window, double xoffset, double yoffset)
 {
-	cam_light.fov -= (float)yoffset;
-    if (cam_light.fov < 1.0f)
-        cam_light.fov = 1.0f;
-    if (cam_light.fov > 65.0f)
-        cam_light.fov = 65.0f; 
+	cam_mat.fov -= (float)yoffset;
+    if (cam_mat.fov < 1.0f)
+        cam_mat.fov = 1.0f;
+    if (cam_mat.fov > 65.0f)
+        cam_mat.fov = 65.0f; 
 }
 #pragma GCC diagnostic pop
