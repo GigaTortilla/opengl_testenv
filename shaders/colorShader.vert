@@ -4,17 +4,20 @@ layout (location = 1) in vec3 aNormalVec;   // the normal vector to the vertices
 
 out vec3 normalVec;
 out vec3 fragPos;
+out vec3 viewLightPos;
 
 uniform mat4 model;
 uniform mat4 modelInv;
 uniform mat4 view;
 uniform mat4 projection;
+uniform vec3 lightPos;      // additional lightPos uniform to pass world-space position into the vertex shader stage
 
 void main()
 {
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
     // multiplying the transpose of the inverse of the upper left 3x3 part of the 4x4 model matrix
     // with the normal vector transforms it to world space
     normalVec = mat3(modelInv) * aNormalVec;
-    fragPos = vec3(model * vec4(aPos, 1.0));
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    fragPos = vec3(view * model * vec4(aPos, 1.0));                 // Don't forget to transform fragment position into view space as well
+    viewLightPos = vec3(view * vec4(lightPos, 1.0));                // Transform world-space light position into view space
 } 
