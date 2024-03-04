@@ -28,5 +28,6 @@ int f_coord_sys();
 int f_cubes();
 int f_lighting();
 int f_materials();
+int f_diffuseMap();
 
 #endif
