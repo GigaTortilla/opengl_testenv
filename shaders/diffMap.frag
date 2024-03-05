@@ -2,6 +2,7 @@
 struct Material {
     sampler2D diffuse;
     sampler2D specular;
+    sampler2D emission;
     float shininess;
 };
 struct Light {
@@ -21,6 +22,9 @@ out vec4 FragColor;
 uniform Light light;
 uniform Material material;
 uniform vec3 viewPos;
+
+// time-dependent fun stuff
+uniform float time;
   
 void main()
 {
@@ -37,8 +41,19 @@ void main()
     vec3 viewDirection = normalize(viewPos - fragPos);
     vec3 reflectDirection = reflect(-lightDirection, normalNormal);
     float specImpact = pow(max(dot(reflectDirection, viewDirection), 0.0), material.shininess);
-    vec3 specular = light.specular * specImpact * vec3(texture(material.specular, texCoords).rgb);
+    vec3 specular = light.specular * specImpact * texture(material.specular, texCoords).rgb;
 
-    vec3 result = ambient + diffuse + specular;
+    // emission map
+    vec3 emission = vec3(0.0);
+    if(texture(material.specular, texCoords).r == 0.0)
+    {
+        emission = texture(material.emission, texCoords).rgb;
+
+        // time-dependent fun stuff
+        emission = texture(material.emission, texCoords + vec2(time, 0.0)).rgb;
+        emission = emission * (sin(2.5 * time) + 1.0);
+    }
+
+    vec3 result = ambient + diffuse + specular + emission;
     FragColor = vec4(result, 1.0);
 }

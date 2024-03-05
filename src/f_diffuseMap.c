@@ -143,9 +143,11 @@ int f_diffuseMap()
 	////////////////////
 	unsigned int textureBox = genBindTexRepeat("textures/container2.png");
 	unsigned int textureBoxSpecMap = genBindTexRepeat("textures/lighting_maps_specular_color.png");
+	unsigned int texBoxEmissionMap = genBindTexRepeat("textures/matrix.jpg");
 	glUseProgram(colorShaderProgram);
 	glUniform1i(glGetUniformLocation(colorShaderProgram, "material.diffuse"), 0);
 	glUniform1i(glGetUniformLocation(colorShaderProgram, "material.specular"), 1);
+	glUniform1i(glGetUniformLocation(colorShaderProgram, "material.emission"), 2);
 
 	// Finding the location of the shader uniforms
 
@@ -162,6 +164,9 @@ int f_diffuseMap()
 	unsigned int diffLightLocation = glGetUniformLocation(colorShaderProgram, "light.diffuse");
 	unsigned int specLightLocation = glGetUniformLocation(colorShaderProgram, "light.specular");
 	unsigned int posLightLocation = glGetUniformLocation(colorShaderProgram, "light.position");
+
+	// time-dependent fun stuff
+	unsigned int timeLocation = glGetUniformLocation(colorShaderProgram, "time");
 	
 	// Light cube shader program
 	unsigned int lightModelLocation = glGetUniformLocation(lightShaderProgram, "model");
@@ -218,6 +223,9 @@ int f_diffuseMap()
 		// Set material properties for lighting
 		glUniform1f(shininessMaterialLocation, coral.shininess * 128.0f);
 
+		// extra time-dependent fun stuff
+		glUniform1f(timeLocation, timeValue);
+
 		// Set light color and position for the cubes shader stage
 		glUniform3fv(ambLightLocation, 1, glms_vec3_scale(lightColor, 0.1f).raw);
 		glUniform3fv(diffLightLocation, 1, glms_vec3_scale(lightColor, 0.5f).raw);
@@ -244,9 +252,11 @@ int f_diffuseMap()
 
 		// Bind the textures on the corresponding texture units
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textureBox);
+		glBindTexture(GL_TEXTURE_2D, textureBox);				/// Box texture
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, textureBoxSpecMap);
+		glBindTexture(GL_TEXTURE_2D, textureBoxSpecMap);		/// Specular map
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, texBoxEmissionMap);		/// Emission map
 
 		glBindVertexArray(cubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
