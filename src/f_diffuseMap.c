@@ -142,7 +142,7 @@ int f_diffuseMap()
 	///// Textures /////
 	////////////////////
 	unsigned int textureBox = genBindTexRepeat("textures/container2.png");
-	unsigned int textureBoxSpecMap = genBindTexRepeat("textures/container2_specular.png");
+	unsigned int textureBoxSpecMap = genBindTexRepeat("textures/lighting_maps_specular_color.png");
 	glUseProgram(colorShaderProgram);
 	glUniform1i(glGetUniformLocation(colorShaderProgram, "material.diffuse"), 0);
 	glUniform1i(glGetUniformLocation(colorShaderProgram, "material.specular"), 1);
