@@ -12,10 +12,6 @@
 // WARNING: #define STB_IMAGE_IMPLEMENTATION in main.c
 #include <stb_image.h>
 
-// Screen constants
-#define SCREEN_WIDTH 1024
-#define SCREEN_HEIGHT 768
-
 // Global camera struct initialization
 Camera cam_map = {
 	.pos = {{ -1.5f, 0.0f, 5.0f }},
@@ -27,8 +23,8 @@ Camera cam_map = {
 	.speed = 0.05f,
 
 	.firstMouse = true,
-	.lastMouseX = SCREEN_WIDTH / 2.0f,
-	.lastMouseY = SCREEN_HEIGHT / 2.0f,
+	.lastMouseX = SCREEN_WIDTH_SXGA / 2.0f,
+	.lastMouseY = SCREEN_HEIGHT_SXGA / 2.0f,
 
 	.yawAngle = -90.0f,
 	.pitchAngle = 0.0f
@@ -100,7 +96,7 @@ int f_diffuseMap()
 	// Stores the time at the previous frame to calculate time differences between frames
 	float lastFrame = 0.0f;
 
-	GLFWwindow *window = initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "citrus.png", "OpenGLTestEnvironment");
+	GLFWwindow *window = initWindow(SCREEN_WIDTH_SXGA, SCREEN_HEIGHT_SXGA, "citrus.png", "OpenGLTestEnvironment");
 
 	// hide and capture cursor
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -110,7 +106,6 @@ int f_diffuseMap()
 	glfwSetScrollCallback(window, scrollCallbackDiff);
 
 	// Build the shader programs
-	// Since both programs use the same functions in the vertex shader stage, using the same vertex shader file is a good option
 	unsigned int colorShaderProgram = buildShaderProgram("diffMap.vert", "diffMap.frag");
 	unsigned int lightShaderProgram = buildShaderProgram("lightCube.vert", "lightMaterials.frag");
 	
@@ -175,7 +170,8 @@ int f_diffuseMap()
 	unsigned int lightColorLocation = glGetUniformLocation(lightShaderProgram, "lightColor");
 
 	// lighting
-	vec3s cubePos = {{ 0.0f, -1.0f, 0.0f }};
+	vec3s cubePos = {{ 0.0f, -0.8f, 0.0f }};
+	vec3s lightPos = {{ 1.0f, 0.1f, 1.0f }};
 	vec3s lightColor = {{ 1.0f, 1.0f, 1.0f }};
 
 	//////////////////////
@@ -193,8 +189,8 @@ int f_diffuseMap()
 		float deltaTime = timeValue - lastFrame;
 		lastFrame = timeValue; 
 
-		// Update light color values
-		lightColor = testColorStrobe(timeValue);
+		// // Update light color values
+		// lightColor = testColorStrobe(timeValue);
 		
 		// clear screen first
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -210,7 +206,7 @@ int f_diffuseMap()
 		// Projection matrix calculation
 		mat4 projection;
 		glm_mat4_identity(projection);
-		glm_perspective(glm_rad(cam_map.fov), (float)SCREEN_WIDTH/SCREEN_HEIGHT, 0.1f, 100.0f, projection);
+		glm_perspective(glm_rad(cam_map.fov), (float)SCREEN_WIDTH_SXGA/SCREEN_HEIGHT_SXGA, 0.1f, 100.0f, projection);
 		
 		////////////////////////
 		///// Colored cube /////

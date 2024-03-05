@@ -1,6 +1,25 @@
 #ifndef TESTENV_FUNCS_H
 #define TESTENV_FUNCS_H
 
+///
+/// Screen constants
+///
+
+#define SCREEN_WIDTH_PAL     768
+#define SCREEN_HEIGHT_PAL    576
+
+#define SCREEN_WIDTH_XGA     1024
+#define SCREEN_HEIGHT_XGA    768
+
+#define SCREEN_WIDTH_SXGA    1280
+#define SCREEN_HEIGHT_SXGA   1024
+
+#define SCREEN_WIDTH_HD720P  1280
+#define SCREEN_HEIGHT_HD720P 720
+
+#define SCREEN_WIDTH_FULLHD  1920
+#define SCREEN_HEIGHT_FULLHD 1080
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <cglm/struct.h>
