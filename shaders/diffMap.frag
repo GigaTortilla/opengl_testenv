@@ -50,8 +50,8 @@ void main()
         emission = texture(material.emission, texCoords).rgb;
 
         // time-dependent fun stuff
-        emission = texture(material.emission, texCoords + vec2(time, 0.0)).rgb;
-        emission = emission * (sin(2.5 * time) + 1.0);
+        // emission = texture(material.emission, texCoords + vec2(0.5 * time, 0.0)).rgb;
+        emission = emission * vec3(0.0, 0.1, sin(2.5 * time) + 1.0);
     }
 
     vec3 result = ambient + diffuse + specular + emission;

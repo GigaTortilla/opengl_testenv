@@ -143,7 +143,7 @@ int f_diffuseMap()
 	////////////////////
 	unsigned int textureBox = genBindTexRepeat("textures/container2.png");
 	unsigned int textureBoxSpecMap = genBindTexRepeat("textures/lighting_maps_specular_color.png");
-	unsigned int texBoxEmissionMap = genBindTexRepeat("textures/matrix.jpg");
+	unsigned int texBoxEmissionMap = genBindTexRepeat("textures/container2_emission.png");
 	glUseProgram(colorShaderProgram);
 	glUniform1i(glGetUniformLocation(colorShaderProgram, "material.diffuse"), 0);
 	glUniform1i(glGetUniformLocation(colorShaderProgram, "material.specular"), 1);
@@ -201,8 +201,8 @@ int f_diffuseMap()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		// Update light cube position
-		lightPos = hoverAroundPoint(cubePos, 2.5f, 0.8f, 0.9f, timeValue);
+		// // Update light cube position
+		// lightPos = hoverAroundPoint(cubePos, 2.5f, 0.8f, 0.9f, timeValue);
 
 		// Calculating the view matrix
 		updateCam(&cam_map, window, deltaTime);
