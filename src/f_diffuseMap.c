@@ -147,8 +147,10 @@ int f_diffuseMap()
 	///// Textures /////
 	////////////////////
 	unsigned int textureBox = genBindTexRepeat("textures/container2.png");
+	unsigned int textureBoxSpecMap = genBindTexRepeat("textures/container2_specular.png");
 	glUseProgram(colorShaderProgram);
-	glUniform1i(glGetUniformLocation(colorShaderProgram, "materials.diffuse"), 0);
+	glUniform1i(glGetUniformLocation(colorShaderProgram, "material.diffuse"), 0);
+	glUniform1i(glGetUniformLocation(colorShaderProgram, "material.specular"), 1);
 
 	// Finding the location of the shader uniforms
 
@@ -160,9 +162,6 @@ int f_diffuseMap()
 
 	// Lighting uniforms in shader program
 	unsigned int viewPosLocation = glGetUniformLocation(colorShaderProgram, "viewPos");
-	unsigned int ambMaterialLocation = glGetUniformLocation(colorShaderProgram, "material.ambient");
-	unsigned int diffMaterialLocation = glGetUniformLocation(colorShaderProgram, "material.diffuse");
-	unsigned int specMaterialLocation = glGetUniformLocation(colorShaderProgram, "material.specular");
 	unsigned int shininessMaterialLocation = glGetUniformLocation(colorShaderProgram, "material.shininess");
 	unsigned int ambLightLocation = glGetUniformLocation(colorShaderProgram, "light.ambient");
 	unsigned int diffLightLocation = glGetUniformLocation(colorShaderProgram, "light.diffuse");
@@ -200,13 +199,9 @@ int f_diffuseMap()
 		// clear screen first
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		// Bind the textures on the corresponding texture units
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textureBox);
 		
 		// Update light cube position
-		vec3s lightPos = hoverAroundPoint(cubePos, 2.5f, 0.8f, 0.9f, timeValue);
+		lightPos = hoverAroundPoint(cubePos, 2.5f, 0.8f, 0.9f, timeValue);
 
 		// Calculating the view matrix
 		updateCam(&cam_map, window, deltaTime);
@@ -225,14 +220,11 @@ int f_diffuseMap()
 		glUseProgram(colorShaderProgram);
 
 		// Set material properties for lighting
-		glUniform3fv(ambMaterialLocation, 1, ruby.ambient.raw);
-		glUniform3fv(diffMaterialLocation, 1, ruby.diffuse.raw);
-		glUniform3fv(specMaterialLocation, 1, ruby.specular.raw);
-		glUniform1f(shininessMaterialLocation, ruby.shininess * 128.0f);
+		glUniform1f(shininessMaterialLocation, coral.shininess * 128.0f);
 
 		// Set light color and position for the cubes shader stage
-		glUniform3fv(ambLightLocation, 1, glms_vec3_mul(lightColor, (vec3s) {{ 0.1f, 0.1f, 0.1f }}).raw);
-		glUniform3fv(diffLightLocation, 1, glms_vec3_mul(lightColor, (vec3s) {{ 0.5f, 0.5f, 0.5f }}).raw);
+		glUniform3fv(ambLightLocation, 1, glms_vec3_scale(lightColor, 0.1f).raw);
+		glUniform3fv(diffLightLocation, 1, glms_vec3_scale(lightColor, 0.5f).raw);
 		glUniform3fv(specLightLocation, 1, lightColor.raw);
 		glUniform3fv(posLightLocation, 1, lightPos.raw);
 
@@ -253,6 +245,12 @@ int f_diffuseMap()
 		// for transforming the normal vectors to world space.
 		glUniformMatrix4fv(cubeModelLocation, 1, GL_FALSE, *cubeModel.raw);
 		glUniformMatrix4fv(cubeModelInvLocation, 1, GL_TRUE, *cubeModelInv.raw);
+
+		// Bind the textures on the corresponding texture units
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textureBox);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, textureBoxSpecMap);
 
 		glBindVertexArray(cubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
