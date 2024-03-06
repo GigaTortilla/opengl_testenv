@@ -6,7 +6,8 @@ struct Material {
     float shininess;
 };
 struct Light {
-    vec3 position;
+    // replaced light position with direction since directional light is coherent and independent of the distance
+    vec3 direction;
 
     vec3 ambient;
     vec3 diffuse;
@@ -33,7 +34,9 @@ void main()
 
     // diffuse lighting 
     vec3 normalNormal = normalize(normalVec);
-    vec3 lightDirection = normalize(light.position - fragPos);
+    // inverted since usually light directions are specified away from the light source
+    // our calculation uses a direction vector from the fragment towards the light source
+    vec3 lightDirection = normalize(-light.direction);
     float diffImpact = max(dot(normalNormal, lightDirection), 0.0);
     vec3 diffuse = light.diffuse * diffImpact * texture(material.diffuse, texCoords).rgb;
 
@@ -51,7 +54,7 @@ void main()
 
         // time-dependent fun stuff
         // emission = texture(material.emission, texCoords + vec2(0.5 * time, 0.0)).rgb;
-        emission = emission * vec3(0.0, 0.1, sin(2.5 * time) + 1.0);
+        emission = emission * vec3(0.1, 0.0, sin(2.5 * time) + 1.0);
     }
 
     vec3 result = ambient + diffuse + specular + emission;

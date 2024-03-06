@@ -80,6 +80,18 @@ int f_more_light()
 		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
 		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
 	};
+	vec3s cubePositions[] = {
+		{{  0.0f,  0.0f,  0.0f  }},
+		{{  2.0f,  5.0f, -15.0f }},
+		{{ -1.5f, -2.2f, -2.5f  }},
+		{{ -3.8f, -2.0f, -12.3f }},
+		{{  2.4f, -0.4f, -3.5f  }},
+		{{ -1.7f,  3.0f, -7.5f  }},
+		{{  1.3f, -2.0f, -2.5f  }},
+		{{  1.5f,  2.0f, -2.5f  }},
+		{{  1.5f,  0.2f, -1.5f  }},
+		{{ -1.3f,  1.0f, -1.5f  }}
+	};
 	Material coral = {
 		.ambient = {{ 1.0f, 0.5f, 0.31f }},
 		.diffuse = {{ 1.0f, 0.5f, 0.31f }},
@@ -163,7 +175,7 @@ int f_more_light()
 	unsigned int ambLightLocation = glGetUniformLocation(colorShaderProgram, "light.ambient");
 	unsigned int diffLightLocation = glGetUniformLocation(colorShaderProgram, "light.diffuse");
 	unsigned int specLightLocation = glGetUniformLocation(colorShaderProgram, "light.specular");
-	unsigned int posLightLocation = glGetUniformLocation(colorShaderProgram, "light.position");
+	unsigned int lightDirectionLocation = glGetUniformLocation(colorShaderProgram, "light.direction");
 
 	// time-dependent fun stuff
 	unsigned int timeLocation = glGetUniformLocation(colorShaderProgram, "time");
@@ -175,7 +187,6 @@ int f_more_light()
 	unsigned int lightColorLocation = glGetUniformLocation(lightShaderProgram, "lightColor");
 
 	// lighting
-	vec3s cubePos = {{ 0.0f, -0.8f, 0.0f }};
 	vec3s lightPos = {{ 1.0f, 0.1f, 1.0f }};
 	vec3s lightColor = {{ 1.0f, 1.0f, 1.0f }};
 
@@ -230,25 +241,14 @@ int f_more_light()
 		glUniform3fv(ambLightLocation, 1, glms_vec3_scale(lightColor, 0.1f).raw);
 		glUniform3fv(diffLightLocation, 1, glms_vec3_scale(lightColor, 0.5f).raw);
 		glUniform3fv(specLightLocation, 1, lightColor.raw);
-		glUniform3fv(posLightLocation, 1, lightPos.raw);
+		glUniform3fv(lightDirectionLocation, 1, (vec3) { -1.0f, -1.0f, -1.0f });
 
 		// Send the camera position to the objects shader
 		glUniform3fv(viewPosLocation, 1, cam_more.pos.raw);
 		
-		// Model matrix for the colored cube
-		mat4s cubeModel = glms_mat4_identity();
-		cubeModel = glms_translate(cubeModel, cubePos);
-
 		// Sending the view and transformation matrices to the shader program
 		glUniformMatrix4fv(cubeViewLocation, 1, GL_FALSE, *view.raw);
 		glUniformMatrix4fv(cubeProjectionLocation, 1, GL_FALSE, projection[0]);
-
-		mat4s cubeModelInv = glms_mat4_inv(cubeModel);
-		// Set the cube position in the world.
-		// Sending the transposed inverse of the model matrix to the vertex shader 
-		// for transforming the normal vectors to world space.
-		glUniformMatrix4fv(cubeModelLocation, 1, GL_FALSE, *cubeModel.raw);
-		glUniformMatrix4fv(cubeModelInvLocation, 1, GL_TRUE, *cubeModelInv.raw);
 
 		// Bind the textures on the corresponding texture units
 		glActiveTexture(GL_TEXTURE0);
@@ -258,8 +258,21 @@ int f_more_light()
 		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, texBoxEmissionMap);		/// Emission map
 
-		glBindVertexArray(cubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+		for(unsigned int i = 0; i < 10; i++)
+		{
+			mat4s cubeModel = glms_mat4_identity();
+			cubeModel = glms_translate(cubeModel, cubePositions[i]);
+			cubeModel = glms_rotate(cubeModel, glm_rad(20.0f * i), (vec3s) {{ 1.0f, 0.3f, 0.5f }});
+			mat4s cubeModelInv = glms_mat4_inv(cubeModel);
+			// Set the cube position in the world.
+			// Sending the transposed inverse of the model matrix to the vertex shader 
+			// for transforming the normal vectors to world space.
+			glUniformMatrix4fv(cubeModelLocation, 1, GL_FALSE, *cubeModel.raw);
+			glUniformMatrix4fv(cubeModelInvLocation, 1, GL_TRUE, *cubeModelInv.raw);
+
+			glBindVertexArray(cubeVAO);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
 
 		//////////////////////
 		///// Light cube /////
