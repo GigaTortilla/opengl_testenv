@@ -6,12 +6,15 @@ struct Material {
     float shininess;
 };
 struct Light {
-    // replaced light position with direction since directional light is coherent and independent of the distance
-    vec3 direction;
+    vec3 position;
 
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
 };
 
 in vec3 normalVec;
@@ -36,7 +39,7 @@ void main()
     vec3 normalNormal = normalize(normalVec);
     // inverted since usually light directions are specified away from the light source
     // our calculation uses a direction vector from the fragment towards the light source
-    vec3 lightDirection = normalize(-light.direction);
+    vec3 lightDirection = normalize(light.position - fragPos);
     float diffImpact = max(dot(normalNormal, lightDirection), 0.0);
     vec3 diffuse = light.diffuse * diffImpact * texture(material.diffuse, texCoords).rgb;
 

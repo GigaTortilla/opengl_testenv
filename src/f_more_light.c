@@ -292,7 +292,7 @@ int f_more_light()
 		// Also set the light cube position in the world
 		mat4s lightModel = glms_mat4_identity();
 		lightModel = glms_translate(lightModel, lightPos);
-		lightModel = glms_scale(lightModel, (vec3s) {{ 0.2f, 0.2f, 0.2f }});
+		lightModel = glms_scale(lightModel, (vec3s) {{ 0.2f, 0.2f, 0.2f }}); // uniform scaling could also be done by glms_vec3_scale()
 		glUniformMatrix4fv(lightModelLocation, 1, GL_FALSE, *lightModel.raw);
 
 		glBindVertexArray(lightVAO);
