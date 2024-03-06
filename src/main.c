@@ -3,6 +3,6 @@
 // no arguments should be passed to the application so no argc/argv here to see
 int main()
 {
-	int exitState = f_diffuseMap();
+	int exitState = f_more_light();
 	return exitState;
 }

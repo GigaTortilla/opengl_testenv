@@ -62,5 +62,6 @@ int f_cubes();
 int f_lighting();
 int f_materials();
 int f_diffuseMap();
+int f_more_light();
 
 #endif
