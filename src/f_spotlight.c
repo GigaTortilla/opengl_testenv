@@ -178,6 +178,7 @@ int f_spotlight()
 	unsigned int lightPosLocation = glGetUniformLocation(colorShaderProgram, "light.position");
 	unsigned int lightDirLocation = glGetUniformLocation(colorShaderProgram, "light.direction");
 	unsigned int lightCutOffLocation = glGetUniformLocation(colorShaderProgram, "light.cutOff");
+	unsigned int lightOuterCutOffLocation = glGetUniformLocation(colorShaderProgram, "light.outerCutOff");
 
 	// Distance parameters
 	unsigned int lightConstantLocation = glGetUniformLocation(colorShaderProgram, "light.constant");
@@ -197,6 +198,7 @@ int f_spotlight()
 	vec3s lightPos = {{ 1.0f, 0.1f, -6.0f }};
 	vec3s lightColor = {{ 1.0f, 1.0f, 1.0f }};
 	float lightCutOff = 0.95f;
+	float lightOuterCutOff = lightCutOff - 0.02f;
 
 	//////////////////////
 	/// Wireframe Mode ///
@@ -215,9 +217,15 @@ int f_spotlight()
 
 		// Update light cone
 		if (glfwGetKey(window, GLFW_KEY_R))
+		{
 			lightCutOff = (lightCutOff < 0.995f) ? lightCutOff + 0.05f * deltaTime : lightCutOff;
+			lightOuterCutOff = lightCutOff - 0.02f;
+		}
 		if (glfwGetKey(window, GLFW_KEY_F))
+		{
 			lightCutOff = (lightCutOff > 0.9f) ? lightCutOff - 0.05f * deltaTime : lightCutOff;
+			lightOuterCutOff = lightCutOff - 0.02f;
+		}
 
 		// // Update light color values
 		// lightColor = testColorStrobe(timeValue);
@@ -263,6 +271,7 @@ int f_spotlight()
 		glUniform3fv(lightPosLocation, 1, cam_spot.pos.raw);
 		glUniform3fv(lightDirLocation, 1, cam_spot.front.raw);
 		glUniform1f(lightCutOffLocation, lightCutOff);
+		glUniform1f(lightOuterCutOffLocation, lightOuterCutOff);
 
 		// Send the camera position to the objects shader
 		glUniform3fv(viewPosLocation, 1, cam_spot.pos.raw);
