@@ -118,7 +118,7 @@ int f_spotlight()
 	glfwSetScrollCallback(window, scrollCallbackSpot);
 
 	// Build the shader programs
-	unsigned int colorShaderProgram = buildShaderProgram("moreLight.vert", "moreLight.frag");
+	unsigned int colorShaderProgram = buildShaderProgram("spotlight.vert", "spotlight.frag");
 	unsigned int lightShaderProgram = buildShaderProgram("lightCube.vert", "lightMaterials.frag");
 	
 	// Set up Vertex Buffer Object and Vertex Array Object
