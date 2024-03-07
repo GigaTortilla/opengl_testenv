@@ -40,5 +40,7 @@ CAMDLL_API vec3s CALL moveForward(Camera* cam);
 CAMDLL_API vec3s CALL moveRight(Camera* cam);
 CAMDLL_API vec3s CALL moveBackward(Camera* cam);
 CAMDLL_API vec3s CALL moveLeft(Camera* cam);
+CAMDLL_API vec3s CALL moveDown(Camera* cam);
+CAMDLL_API vec3s CALL moveUp(Camera* cam);
 
 #endif

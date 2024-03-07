@@ -3,6 +3,7 @@
         "testenv_funcs.h": "c",
         "stb_image.h": "c",
         "glfw3.h": "c",
-        "cam.h": "c"
+        "cam.h": "c",
+        "*.tcc": "c"
     }
 }
