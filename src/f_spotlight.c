@@ -13,7 +13,7 @@
 #include <stb_image.h>
 
 // Global camera struct initialization
-Camera cam_more = {
+Camera cam_spot = {
 	.pos = {{ -1.5f, 0.0f, 5.0f }},
 	.front = {{ 0.0f, 0.0f, -1.0f }},
 	.right = {{ 1.0f, 0.0f, 0.0f }},
@@ -176,6 +176,8 @@ int f_spotlight()
 	unsigned int diffLightLocation = glGetUniformLocation(colorShaderProgram, "light.diffuse");
 	unsigned int specLightLocation = glGetUniformLocation(colorShaderProgram, "light.specular");
 	unsigned int lightPosLocation = glGetUniformLocation(colorShaderProgram, "light.position");
+	unsigned int lightDirLocation = glGetUniformLocation(colorShaderProgram, "light.direction");
+	unsigned int lightCutOffLocation = glGetUniformLocation(colorShaderProgram, "light.cutOff");
 
 	// Distance parameters
 	unsigned int lightConstantLocation = glGetUniformLocation(colorShaderProgram, "light.constant");
@@ -194,6 +196,7 @@ int f_spotlight()
 	// lighting
 	vec3s lightPos = {{ 1.0f, 0.1f, -6.0f }};
 	vec3s lightColor = {{ 1.0f, 1.0f, 1.0f }};
+	float lightCutOff = 0.95f;
 
 	//////////////////////
 	/// Wireframe Mode ///
@@ -210,6 +213,12 @@ int f_spotlight()
 		float deltaTime = timeValue - lastFrame;
 		lastFrame = timeValue; 
 
+		// Update light cone
+		if (glfwGetKey(window, GLFW_KEY_R))
+			lightCutOff = (lightCutOff < 0.995f) ? lightCutOff + 0.05f * deltaTime : lightCutOff;
+		if (glfwGetKey(window, GLFW_KEY_F))
+			lightCutOff = (lightCutOff > 0.9f) ? lightCutOff - 0.05f * deltaTime : lightCutOff;
+
 		// // Update light color values
 		// lightColor = testColorStrobe(timeValue);
 		
@@ -221,13 +230,13 @@ int f_spotlight()
 		lightPos.z = 3.0f * sin(2.0f * timeValue) - 5.0f;
 
 		// Calculating the view matrix
-		updateCam(&cam_more, window, deltaTime);
-		mat4s view = glms_lookat(cam_more.pos, glms_vec3_add(cam_more.pos, cam_more.front), cam_more.up);
+		updateCam(&cam_spot, window, deltaTime);
+		mat4s view = glms_lookat(cam_spot.pos, glms_vec3_add(cam_spot.pos, cam_spot.front), cam_spot.up);
 		
 		// Projection matrix calculation
 		mat4 projection;
 		glm_mat4_identity(projection);
-		glm_perspective(glm_rad(cam_more.fov), (float)SCREEN_WIDTH_SXGA/SCREEN_HEIGHT_SXGA, 0.1f, 100.0f, projection);
+		glm_perspective(glm_rad(cam_spot.fov), (float)SCREEN_WIDTH_SXGA/SCREEN_HEIGHT_SXGA, 0.1f, 100.0f, projection);
 		
 		////////////////////////
 		///// Colored cube /////
@@ -241,8 +250,8 @@ int f_spotlight()
 
 		// Light attenuation parameters
 		glUniform1f(lightConstantLocation, 1.0f);
-		glUniform1f(lightLinearLocation, 0.07f);
-		glUniform1f(lightQuadraticLocation, 0.017f);
+		glUniform1f(lightLinearLocation, 0.027f);
+		glUniform1f(lightQuadraticLocation, 0.0028f);
 
 		// extra time-dependent fun stuff
 		glUniform1f(timeLocation, timeValue);
@@ -251,10 +260,12 @@ int f_spotlight()
 		glUniform3fv(ambLightLocation, 1, glms_vec3_scale(lightColor, 0.1f).raw);
 		glUniform3fv(diffLightLocation, 1, glms_vec3_scale(lightColor, 0.5f).raw);
 		glUniform3fv(specLightLocation, 1, lightColor.raw);
-		glUniform3fv(lightPosLocation, 1, lightPos.raw);
+		glUniform3fv(lightPosLocation, 1, cam_spot.pos.raw);
+		glUniform3fv(lightDirLocation, 1, cam_spot.front.raw);
+		glUniform1f(lightCutOffLocation, lightCutOff);
 
 		// Send the camera position to the objects shader
-		glUniform3fv(viewPosLocation, 1, cam_more.pos.raw);
+		glUniform3fv(viewPosLocation, 1, cam_spot.pos.raw);
 		
 		// Sending the view and transformation matrices to the shader program
 		glUniformMatrix4fv(cubeViewLocation, 1, GL_FALSE, *view.raw);
@@ -328,29 +339,29 @@ int f_spotlight()
 // Callback function to enable camera control using the mouse cursor
 void mouseCallbackSpot(GLFWwindow* window, double xPos, double yPos)
 {
-	if(cam_more.firstMouse)
+	if(cam_spot.firstMouse)
 	{
-		cam_more.lastMouseX = xPos;
-		cam_more.lastMouseY = yPos;
-		cam_more.firstMouse = false;
+		cam_spot.lastMouseX = xPos;
+		cam_spot.lastMouseY = yPos;
+		cam_spot.firstMouse = false;
 	}
 
-	float offsetX = xPos - cam_more.lastMouseX;
-	float offsetY = cam_more.lastMouseY - yPos;
-	cam_more.lastMouseX = xPos;
-	cam_more.lastMouseY = yPos;
+	float offsetX = xPos - cam_spot.lastMouseX;
+	float offsetY = cam_spot.lastMouseY - yPos;
+	cam_spot.lastMouseX = xPos;
+	cam_spot.lastMouseY = yPos;
 
 	float sensitivity = 0.1f;
 	offsetX *= sensitivity;
 	offsetY *= sensitivity;
 
-	cam_more.yawAngle += offsetX;
-	cam_more.pitchAngle += offsetY;
+	cam_spot.yawAngle += offsetX;
+	cam_spot.pitchAngle += offsetY;
 
-	if(cam_more.pitchAngle > 89.0f)
-		cam_more.pitchAngle = 89.0f;
-	if(cam_more.pitchAngle < -89.0f)
-		cam_more.pitchAngle = -89.0f;
+	if(cam_spot.pitchAngle > 89.0f)
+		cam_spot.pitchAngle = 89.0f;
+	if(cam_spot.pitchAngle < -89.0f)
+		cam_spot.pitchAngle = -89.0f;
 }
 #pragma GCC diagnostic pop
 
@@ -360,10 +371,10 @@ void mouseCallbackSpot(GLFWwindow* window, double xPos, double yPos)
 // Callback function to scrolling zoom
 void scrollCallbackSpot(GLFWwindow* window, double xoffset, double yoffset)
 {
-	cam_more.fov -= (float)yoffset;
-    if (cam_more.fov < 1.0f)
-        cam_more.fov = 1.0f;
-    if (cam_more.fov > 65.0f)
-        cam_more.fov = 65.0f; 
+	cam_spot.fov -= (float)yoffset;
+    if (cam_spot.fov < 1.0f)
+        cam_spot.fov = 1.0f;
+    if (cam_spot.fov > 65.0f)
+        cam_spot.fov = 65.0f; 
 }
 #pragma GCC diagnostic pop
