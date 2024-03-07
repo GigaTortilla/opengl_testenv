@@ -175,7 +175,12 @@ int f_more_light()
 	unsigned int ambLightLocation = glGetUniformLocation(colorShaderProgram, "light.ambient");
 	unsigned int diffLightLocation = glGetUniformLocation(colorShaderProgram, "light.diffuse");
 	unsigned int specLightLocation = glGetUniformLocation(colorShaderProgram, "light.specular");
-	unsigned int lightDirectionLocation = glGetUniformLocation(colorShaderProgram, "light.direction");
+	unsigned int lightPosLocation = glGetUniformLocation(colorShaderProgram, "light.position");
+
+	// Distance parameters
+	unsigned int lightConstantLocation = glGetUniformLocation(colorShaderProgram, "light.constant");
+	unsigned int lightLinearLocation = glGetUniformLocation(colorShaderProgram, "light.linear");
+	unsigned int lightQuadraticLocation = glGetUniformLocation(colorShaderProgram, "light.quadratic");
 
 	// time-dependent fun stuff
 	unsigned int timeLocation = glGetUniformLocation(colorShaderProgram, "time");
@@ -187,7 +192,7 @@ int f_more_light()
 	unsigned int lightColorLocation = glGetUniformLocation(lightShaderProgram, "lightColor");
 
 	// lighting
-	vec3s lightPos = {{ 1.0f, 0.1f, 1.0f }};
+	vec3s lightPos = {{ 1.0f, 0.1f, -6.0f }};
 	vec3s lightColor = {{ 1.0f, 1.0f, 1.0f }};
 
 	//////////////////////
@@ -212,8 +217,8 @@ int f_more_light()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		// // Update light cube position
-		// lightPos = hoverAroundPoint(cubePos, 2.5f, 0.8f, 0.9f, timeValue);
+		// Update light cube position
+		lightPos.z = 3.0f * sin(2.0f * timeValue) - 5.0f;
 
 		// Calculating the view matrix
 		updateCam(&cam_more, window, deltaTime);
@@ -234,6 +239,11 @@ int f_more_light()
 		// Set material properties for lighting
 		glUniform1f(shininessMaterialLocation, coral.shininess * 128.0f);
 
+		// Light attenuation parameters
+		glUniform1f(lightConstantLocation, 1.0f);
+		glUniform1f(lightLinearLocation, 0.07f);
+		glUniform1f(lightQuadraticLocation, 0.017f);
+
 		// extra time-dependent fun stuff
 		glUniform1f(timeLocation, timeValue);
 
@@ -241,7 +251,7 @@ int f_more_light()
 		glUniform3fv(ambLightLocation, 1, glms_vec3_scale(lightColor, 0.1f).raw);
 		glUniform3fv(diffLightLocation, 1, glms_vec3_scale(lightColor, 0.5f).raw);
 		glUniform3fv(specLightLocation, 1, lightColor.raw);
-		glUniform3fv(lightDirectionLocation, 1, (vec3) { -1.0f, -1.0f, -1.0f });
+		glUniform3fv(lightPosLocation, 1, lightPos.raw);
 
 		// Send the camera position to the objects shader
 		glUniform3fv(viewPosLocation, 1, cam_more.pos.raw);

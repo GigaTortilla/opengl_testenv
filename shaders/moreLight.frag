@@ -32,6 +32,10 @@ uniform float time;
   
 void main()
 {
+    // attenuation calculation for distant light sources
+    float dist = length(light.position - fragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * (dist * dist));
+
     // ambient lighting
     vec3 ambient = light.ambient * texture(material.diffuse, texCoords).rgb;
 
@@ -57,8 +61,13 @@ void main()
 
         // time-dependent fun stuff
         // emission = texture(material.emission, texCoords + vec2(0.5 * time, 0.0)).rgb;
-        emission = emission * vec3(0.1, 0.0, sin(2.5 * time) + 1.0);
+        emission = emission * vec3(0.1, 0.2 * sin(time) + 0.2, 0.0);
     }
+
+    // attenuating light components
+    ambient *= attenuation;
+    diffuse *= attenuation;
+    specular *= attenuation;
 
     vec3 result = ambient + diffuse + specular + emission;
     FragColor = vec4(result, 1.0);
