@@ -63,5 +63,6 @@ int f_lighting();
 int f_materials();
 int f_diffuseMap();
 int f_more_light();
+int f_spotlight();
 
 #endif
