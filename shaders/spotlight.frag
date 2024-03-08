@@ -123,7 +123,7 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragmentPos, vec3 viewDi
 
 vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragmentPos, vec3 viewDir)
 {
-    vec3 lightDir = normalize(light.direction - fragmentPos);
+    vec3 lightDir = normalize(light.position - fragmentPos);
 
     float diffuseShading = max(dot(lightDir, normal), 0.0);
 
