@@ -161,34 +161,56 @@ int f_spotlight()
 	glUniform1i(glGetUniformLocation(colorShaderProgram, "material.specular"), 1);
 	glUniform1i(glGetUniformLocation(colorShaderProgram, "material.emission"), 2);
 
-	// Finding the location of the shader uniforms
+	////////////////////////////////
+	/// Shader uniform addresses ///
+	////////////////////////////////
 
-	// Colored cube shader program
+	// Colored cube vertex shader stage
 	unsigned int cubeModelLocation = glGetUniformLocation(colorShaderProgram, "model");
 	unsigned int cubeModelInvLocation = glGetUniformLocation(colorShaderProgram, "modelInv");
 	unsigned int cubeViewLocation = glGetUniformLocation(colorShaderProgram, "view");
 	unsigned int cubeProjectionLocation = glGetUniformLocation(colorShaderProgram, "projection");
 
-	// Lighting uniforms in shader program
-	unsigned int viewPosLocation = glGetUniformLocation(colorShaderProgram, "viewPos");
+	// Fragment shader material uniform
 	unsigned int shininessMaterialLocation = glGetUniformLocation(colorShaderProgram, "material.shininess");
-	unsigned int ambLightLocation = glGetUniformLocation(colorShaderProgram, "light.ambient");
-	unsigned int diffLightLocation = glGetUniformLocation(colorShaderProgram, "light.diffuse");
-	unsigned int specLightLocation = glGetUniformLocation(colorShaderProgram, "light.specular");
-	unsigned int lightPosLocation = glGetUniformLocation(colorShaderProgram, "light.position");
-	unsigned int lightDirLocation = glGetUniformLocation(colorShaderProgram, "light.direction");
-	unsigned int lightCutOffLocation = glGetUniformLocation(colorShaderProgram, "light.cutOff");
-	unsigned int lightOuterCutOffLocation = glGetUniformLocation(colorShaderProgram, "light.outerCutOff");
+	
+	// Fragment shader camera position uniform 
+	unsigned int viewPosLocation = glGetUniformLocation(colorShaderProgram, "viewPos");
 
-	// Distance parameters
-	unsigned int lightConstantLocation = glGetUniformLocation(colorShaderProgram, "light.constant");
-	unsigned int lightLinearLocation = glGetUniformLocation(colorShaderProgram, "light.linear");
-	unsigned int lightQuadraticLocation = glGetUniformLocation(colorShaderProgram, "light.quadratic");
+	// Directional light
+	unsigned int dirLightDirLocation = glGetUniformLocation(colorShaderProgram, "direcionalLight.direction");
+	unsigned int dirLightAmbLocation = glGetUniformLocation(colorShaderProgram, "direcionalLight.ambient");
+	unsigned int dirLightDiffLocation = glGetUniformLocation(colorShaderProgram, "direcionalLight.diffuse");
+	unsigned int dirLightSpecLocation = glGetUniformLocation(colorShaderProgram, "direcionalLight.specular");
+
+	// Point light
+	unsigned int ptLightPosLocation = glGetUniformLocation(colorShaderProgram, "pointLight.position");
+	unsigned int ptLightConstLocation = glGetUniformLocation(colorShaderProgram, "pointLight.constant");
+	unsigned int ptLightLinLocation = glGetUniformLocation(colorShaderProgram, "pointLight.linear");
+	unsigned int ptLightQuadLocation = glGetUniformLocation(colorShaderProgram, "pointLight.quadratic");
+	unsigned int ptLightAmbLocation = glGetUniformLocation(colorShaderProgram, "pointLight.ambient");
+	unsigned int ptLightDiffLocation = glGetUniformLocation(colorShaderProgram, "pointLight.diffuse");
+	unsigned int ptLightSpecLocation = glGetUniformLocation(colorShaderProgram, "pointLight.specular");
+
+	// Spotlight
+	unsigned int spotLightPosLocation = glGetUniformLocation(colorShaderProgram, "spotlight.position");
+	unsigned int spotLightDirLocation = glGetUniformLocation(colorShaderProgram, "spotlight.direction");
+	unsigned int spotLightCutOffLocation = glGetUniformLocation(colorShaderProgram, "spotlight.cutOff");
+	unsigned int spotLightOutCutOffLocation = glGetUniformLocation(colorShaderProgram, "spotlight.outerCutOff");
+	unsigned int spotLightConstLocation = glGetUniformLocation(colorShaderProgram, "spotlight.constant");
+	unsigned int spotLightLinLocation = glGetUniformLocation(colorShaderProgram, "spotlight.linear");
+	unsigned int spotLightQuadLocation = glGetUniformLocation(colorShaderProgram, "spotlight.quadratic");
+	unsigned int spotLightAmbLocation = glGetUniformLocation(colorShaderProgram, "spotlight.ambient");
+	unsigned int spotLightDiffLocation = glGetUniformLocation(colorShaderProgram, "spotlight.diffuse");
+	unsigned int spotLightSpecLocation = glGetUniformLocation(colorShaderProgram, "spotlight.specular");
 
 	// time-dependent fun stuff
 	unsigned int timeLocation = glGetUniformLocation(colorShaderProgram, "time");
-	
-	// Light cube shader program
+
+	//////////////////////////////////////////
+	/// Light cube shader program uniforms ///
+	//////////////////////////////////////////
+
 	unsigned int lightModelLocation = glGetUniformLocation(lightShaderProgram, "model");
 	unsigned int lightViewLocation = glGetUniformLocation(lightShaderProgram, "view");
 	unsigned int lightProjectionLocation = glGetUniformLocation(lightShaderProgram, "projection");
@@ -256,22 +278,35 @@ int f_spotlight()
 		// Set material properties for lighting
 		glUniform1f(shininessMaterialLocation, coral.shininess * 128.0f);
 
-		// Light attenuation parameters
-		glUniform1f(lightConstantLocation, 1.0f);
-		glUniform1f(lightLinearLocation, 0.027f);
-		glUniform1f(lightQuadraticLocation, 0.0028f);
+		// Light parameters
+		glUniform3fv(dirLightDirLocation, 1, (vec3) { -0.2f, -1.0f, -0.3f });
+		glUniform3fv(dirLightAmbLocation, 1, glms_vec3_scale(lightColor, 0.1f).raw);
+		glUniform3fv(dirLightDiffLocation, 1, glms_vec3_scale(lightColor, 0.5f).raw);
+		glUniform3fv(dirLightSpecLocation, 1, lightColor.raw);
+
+		glUniform3fv(ptLightPosLocation, 1, lightPos.raw);
+		glUniform1f(ptLightConstLocation, 1.0f);
+		glUniform1f(ptLightLinLocation, 0.027f);
+		glUniform1f(ptLightQuadLocation, 0.0028f);
+		glUniform3fv(ptLightAmbLocation, 1, glms_vec3_scale(lightColor, 0.1f).raw);
+		glUniform3fv(ptLightDiffLocation, 1, glms_vec3_scale(lightColor, 0.5f).raw);
+		glUniform3fv(ptLightSpecLocation, 1, lightColor.raw);
+
+		glUniform3fv(spotLightPosLocation, 1, cam_spot.pos.raw);
+		glUniform3fv(spotLightDirLocation, 1, cam_spot.front.raw);
+		glUniform1f(spotLightCutOffLocation, lightCutOff);
+		glUniform1f(spotLightOutCutOffLocation, lightOuterCutOff);
+		glUniform1f(spotLightConstLocation, 1.0f);
+		glUniform1f(spotLightLinLocation, 0.027f);
+		glUniform1f(spotLightQuadLocation, 0.0028f);
+		glUniform3fv(spotLightAmbLocation, 1, glms_vec3_scale(lightColor, 0.1f).raw);
+		glUniform3fv(spotLightDiffLocation, 1, glms_vec3_scale(lightColor, 0.5f).raw);
+		glUniform3fv(spotLightSpecLocation, 1, lightColor.raw);
 
 		// extra time-dependent fun stuff
 		glUniform1f(timeLocation, timeValue);
 
 		// Set light color and position for the cubes shader stage
-		glUniform3fv(ambLightLocation, 1, glms_vec3_scale(lightColor, 0.1f).raw);
-		glUniform3fv(diffLightLocation, 1, glms_vec3_scale(lightColor, 0.5f).raw);
-		glUniform3fv(specLightLocation, 1, lightColor.raw);
-		glUniform3fv(lightPosLocation, 1, cam_spot.pos.raw);
-		glUniform3fv(lightDirLocation, 1, cam_spot.front.raw);
-		glUniform1f(lightCutOffLocation, lightCutOff);
-		glUniform1f(lightOuterCutOffLocation, lightOuterCutOff);
 
 		// Send the camera position to the objects shader
 		glUniform3fv(viewPosLocation, 1, cam_spot.pos.raw);
